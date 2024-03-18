@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\projects;
-use App\Models\domain;
+use App\Models\domains;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_domain', function (Blueprint $table) {
+        Schema::create('project_domains', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(projects::class);
-            $table->foreignIdFor(domain::class);
+            $table->foreignIdFor(domains::class);
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_domain');
+        Schema::dropIfExists('project_domains');
     }
 };

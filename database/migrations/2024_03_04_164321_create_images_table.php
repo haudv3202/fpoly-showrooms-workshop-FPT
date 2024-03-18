@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->boolean('is_active');
-            $table->boolean('type')->default(0);
+            $table->boolean('type')->default(0);// 0 là banner -  1 là avatar project - 2 là image project
             $table->foreignIdFor(projects::class)->nullable();
             $table->timestamps();
         });

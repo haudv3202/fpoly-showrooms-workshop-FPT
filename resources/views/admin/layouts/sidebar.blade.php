@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.levels.index') }}">
+                    <a class="nav-link menu-link" href="{{ route('admin.projects.index') }}">
                         <span data-key="t-base-ui">Quản lí dự án</span>
                     </a>
                 </li>

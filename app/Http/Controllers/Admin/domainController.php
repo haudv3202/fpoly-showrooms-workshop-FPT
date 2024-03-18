@@ -3,21 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\domain;
+use App\Models\domains;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class domainController extends Controller
 {
     public function index(){
-        $allDomain = domain::paginate(10);
+        $allDomain = domains::paginate(10);
         return view('admin.pages.domain.index',compact('allDomain'));
     }
 
     public function search(Request $request){
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-        $allDomain = domain::whereBetween('created_at', [$startDate, $endDate])->paginate(10);
+        $request->validate([
+            'startDate' => 'required|before:endDate',
+            'endDate' => 'required|after:startDate'
+        ], [
+            'startDate.required' => 'Không được để trống ngày bắt đầu',
+            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
+            'endDate.required' => 'Không được để trống ngày kết thúc',
+            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+        ]);
+        $allDomain = domains::whereBetween('created_at', [$startDate, $endDate])->paginate(10);
         return view('admin.pages.domain.index',compact('allDomain','startDate','endDate'));
     }
 
@@ -35,7 +44,7 @@ class domainController extends Controller
             'nameDomain.unique' => 'Tên lĩnh vực đã tồn tại'
         ]);
 
-        domain::create([
+        domains::create([
             'is_active' => $request->is_active,
             'name' => $request->nameDomain
         ]);
@@ -44,7 +53,7 @@ class domainController extends Controller
     }
 
     public function edit($id){
-        $domain = domain::find($id);
+        $domain = domains::find($id);
         return view('admin.pages.domain.edit',compact('domain'));
     }
 
@@ -57,7 +66,7 @@ class domainController extends Controller
             'nameDomain.required' => 'Không để trống tên lĩnh vực'
         ]);
 
-        $domain = domain::find($request->id);
+        $domain = domains::find($request->id);
 
         $domain->is_active = $request->is_active;
         $domain->name = $request->nameDomain;
@@ -68,7 +77,7 @@ class domainController extends Controller
 
     public function delete($ids){
         $idsArr = explode(',',$ids);
-        domain::destroy($idsArr);
+        domains::destroy($idsArr);
         return redirect()->route('admin.domain.index');
     }
 }
