@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class project_user extends Model
+class domains extends Model
 {
     use HasFactory;
-    protected $fillable = ['projects_id','author_id'];
+    protected $fillable = ['name','is_active', 'created_at','updated_at'];
 }

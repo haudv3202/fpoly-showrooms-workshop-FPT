@@ -54,10 +54,29 @@
                                     <div id="dateSearch" hidden >
                                         <form action="{{ route('admin.technicals.search') }}" method="POST" class="d-flex align-items-center" >
                                            @csrf
-                                            <input type="date" class="form-control ms-2" name="startDate"    value="{{ !empty($startDate) ? \Illuminate\Support\Carbon::parse($startDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->format('Y-m-d') }}" >
-                                            <i class="ri-arrow-left-right-line fs-5"></i>
-                                            <input type="date" class="form-control ms-2" name="endDate"  value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->addDays(7)->format('Y-m-d') }}" >
-                                            <button type="submit" class="btn btn-danger ms-2" data-toast data-toast-text="Đã tải dữ liệu mới" data-toast-gravity="top" data-toast-position="right" data-toast-duration="3000" data-toast-close="close" ><i class="ri-search-line"></i></button>
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <input type="date" class="form-control ms-2" name="startDate"
+                                                           value="{{ !empty($startDate) ? \Illuminate\Support\Carbon::parse($startDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->format('Y-m-d') }}">
+                                                    @error('startDate')
+                                                    <div class="alert alert-danger h6 m-2">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-lg-1 d-flex align-items-center justify-content-center"><i class="ri-arrow-left-right-line fs-5"></i></div>
+                                                <div  class="col-lg-4">
+                                                    <input type="date" class="form-control ms-2" name="endDate"
+                                                           value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->addDays(7)->format('Y-m-d') }}">
+                                                    @error('endDate')
+                                                    <div class="alert alert-danger h6 m-2">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <button type="submit" class="btn btn-danger ms-2" data-toast
+                                                            data-toast-text="Đã tải dữ liệu mới" data-toast-gravity="top"
+                                                            data-toast-position="right" data-toast-duration="3000"
+                                                            data-toast-close="close"><i class="ri-search-line"></i></button>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
 

@@ -3,6 +3,7 @@
 @push('styles')
     <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
           type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 @endpush
 @section('content')
 
@@ -28,12 +29,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Mức độ dự án</h4>
+                        <h4 class="mb-sm-0">Quản lí công nghệ</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Mức độ</a></li>
-                                <li class="breadcrumb-item active">Danh sách mức độ</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Công nghệ sử dụng</a></li>
+                                <li class="breadcrumb-item active">Danh sách công nghệ</li>
                             </ol>
                         </div>
 
@@ -50,10 +51,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- Input Date -->
                                 <div class="d-flex align-items-center ">
-                                    <button type="button" class="btn btn-success waves-effect waves-light " id="btnSearch"><i class="ri-filter-2-fill"></i></button>
-                                    <div id="dateSearch" hidden >
-                                        <form action="{{ route('admin.levels.search') }}" method="POST" class="d-flex align-items-center" >
-                                           @csrf
+                                    <button type="button" class="btn btn-success waves-effect waves-light "
+                                            id="btnSearch"><i class="ri-filter-2-fill"></i></button>
+                                    <div id="dateSearch" hidden>
+                                        <form action="{{ route('admin.projects.search') }}" method="POST"
+                                              class="d-flex align-items-center">
+                                            @csrf
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <input type="date" class="form-control ms-2" name="startDate"
@@ -77,16 +80,32 @@
                                                             data-toast-close="close"><i class="ri-search-line"></i></button>
                                                 </div>
                                             </div>
+
                                         </form>
+
                                     </div>
 
                                 </div>
+{{--                                <div class="row mt-3">--}}
+{{--                                    <div class="col-lg-6">--}}
+{{--                                        <input type="text" class="form-control" name="projectName" placeholder="Tên dự án" value="{{ $projectName ?? '' }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-6">--}}
+{{--                                        <select class="form-select" name="projectLevel">--}}
+{{--                                            <option value="">Chọn cấp độ dự án</option>--}}
+{{--                                            <option value="1" {{ isset($projectLevel) && $projectLevel == 1 ? 'selected' : '' }}>Cấp độ 1</option>--}}
+{{--                                            <option value="2" {{ isset($projectLevel) && $projectLevel == 2 ? 'selected' : '' }}>Cấp độ 2</option>--}}
+{{--                                            <!-- Thêm các option cho các cấp độ khác nếu cần thiết -->--}}
+{{--                                        </select>--}}
+{{--                                    </div>--}}
+{{--                                    --}}
+{{--                                </div>--}}
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('admin.levels.create') }}"
+                                    <a href="{{ route('admin.projects.create') }}"
                                        class="btn btn-primary waves-effect waves-light">Thêm mới</a>
-                                    <button type="button"  hidden class="btn ms-2 btn-danger waves-effect waves-light" id="deleteSelectedBtn">  <i class="ri-delete-bin-line"></i> </button>
+                                    <button type="button" hidden class="btn ms-2 btn-danger waves-effect waves-light"
+                                            id="deleteSelectedBtn"><i class="ri-delete-bin-line"></i></button>
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -102,27 +121,95 @@
                                         </div>
                                     </th>
                                     {{--                                    <th>Ảnh</th>--}}
-                                    <th>Tên cấp độ</th>
-                                    <th>Mô tả</th>
+                                    <th>Tên dự án</th>
+                                    <th>Link deloy</th>
+                                    <th>Cấp độ dự án</th>
+                                    <th>Người thực hiện</th>
+                                    <th>Công nghệ</th>
+                                    <th>Lĩnh vực</th>
+                                    <th>Lượt xem</th>
+                                    <th>Trạng thái</th>
+                                    <th>Mức độ hiển thị</th>
                                     <th>Thời gian tạo</th>
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if($Levels->count() > 0)
-                                    @foreach($Levels as $key => $level)
+                                @if($projects->count() > 0)
+                                    @foreach($projects as $key => $project)
                                         <tr>
                                             <th scope="row">
                                                 <div class="form-check">
                                                     <input class="form-check-input fs-15" type="checkbox"
-                                                           name="checkAll" value="{{ $level->id }}">
+                                                           name="checkAll" value="{{ $project->id }}">
                                                 </div>
                                             </th>
-                                            <td>{{ $level->name }}</td>
+                                            {{--                                            <td><img class="img-banner" src="{{ \Illuminate\Support\Facades\Storage::url('images/banner/' .$banner->image) }}" alt="" ></td>--}}
                                             <td>
-                                                {{ $level->description }}
+                                                {{ $project->name }}
                                             </td>
-                                            <td>{{ \Illuminate\Support\Carbon::parse($level->created_at)->format('d M, Y') }}</td>
+                                            <td>
+                                                <a class="text-decoration-underline link-offset-3" href="{{ $project->deploy_link }}">{{ $project->name }}</a>
+                                            </td>
+                                            <td>
+                                                {{ $project->level->name }}
+                                            </td>
+                                            <td>
+                                                @php
+                                                    $members = json_decode($project->added_by);
+                                                    $users = \App\Models\User::whereIn('id', $members)->get();
+                                                @endphp
+                                                @forelse($users as $key => $member)
+                                                    <span class="badge bg-secondary">{{ $member->name }}</span>
+                                                @empty
+                                                    <span class="badge bg-secondary">Không có thành viên tham dự</span>
+                                                @endforelse
+
+                                            </td>
+
+                                            <td>
+                                                @php
+                                                    $technicals = \App\Models\technical_projects::with('technical')->where('projects_id', $project->id)->get();
+                                                @endphp
+                                                @forelse($technicals as $key => $technical)
+                                                    <span class="badge bg-secondary">{{ $technical->technical->name }}</span>
+                                                @empty
+                                                    <span class="badge bg-secondary">Không có công nghệ sử dụng</span>
+                                                @endforelse
+
+                                            </td>
+
+                                            <td>
+                                                @php
+                                                    $domains = \App\Models\project_domains::with('domain')->where('projects_id', $project->id)->get();
+                                                @endphp
+                                                @forelse($domains as $key => $domain)
+                                                    <span class="badge bg-secondary">{{ $domain->domain->name }}</span>
+                                                @empty
+                                                    <span class="badge bg-secondary">Không thuộc lĩnh vực nào</span>
+                                                @endforelse
+
+                                            </td>
+                                            <td>
+                                                {{ $project->views }}
+                                            </td>
+
+                                            <td>
+                                                @if($project->is_active == 0)
+                                                    <span class="badge bg-success">Đã Hoàn thành</span>
+                                                @else
+                                                    <span class="badge bg-danger">Chưa Hoàn thành</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($project->is_highlight == 0)
+                                                    <span class="badge bg-warning">Ẩn</span>
+                                                @else
+                                                    <span class="badge bg-primary">Hiện</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ \Illuminate\Support\Carbon::parse($project->created_at)->format('d M, Y') }}</td>
+
                                             <td>
                                                 <div class="dropdown d-inline-block">
                                                     <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -130,15 +217,14 @@
                                                         <i class="ri-more-fill align-middle"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-
-
                                                         <li><a class="dropdown-item edit-item-btn"
-                                                               href="{{ route('admin.levels.edit',$level->id) }}"><i
+                                                               href="{{ route('admin.projects.edit',$project->id) }}"><i
                                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                                 Edit</a></li>
                                                         <li>
 
-                                                            <a class="dropdown-item remove-item-btn btnDelete" data-id="{{$level->id}}">
+                                                            <a class="dropdown-item remove-item-btn btnDelete"
+                                                               data-id="{{$project->id}}">
                                                                 <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                                 Delete
                                                             </a>
@@ -152,7 +238,7 @@
                                 @endif
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{ $Levels->links() }}
+                                {{ $projects->links() }}
                             </div>
                         </div>
                     </div>
@@ -172,6 +258,13 @@
 
     <!-- Modal Js -->
     <script src="{{ asset('theme/admin/assets/js/pages/modal.init.js') }}"></script>
+    <!--jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--select2 cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="{{ asset('theme/admin/assets/js/pages/select2.init.js') }}"></script>
     <script>
         // Delete
         const btnSearch = document.querySelector('#btnSearch');
@@ -191,7 +284,6 @@
         // checkbox
         const selectAllBtn = document.getElementById('checkAll');
         const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-        console.log(selectAllBtn);
         selectAllBtn.addEventListener('click', function () {
             const checkboxes = document.querySelectorAll('input[name="checkAll"]');
             const checkedStatus = selectAllBtn.getAttribute('data-checked');
@@ -203,7 +295,7 @@
 
 
             const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-            deleteSelectedBtn.setAttribute('data-ids', Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value).join(',') );
+            deleteSelectedBtn.setAttribute('data-ids', Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value).join(','));
             deleteSelectedBtn.hidden = !anyChecked;
         });
 
@@ -212,7 +304,7 @@
             checkbox.addEventListener('click', function () {
                 // Hiển thị hoặc ẩn nút "Xóa các mục đã chọn" dựa trên trạng thái của checkbox
                 const anyChecked = Array.from(document.querySelectorAll('input[name="checkAll"]')).some(checkbox => checkbox.checked);
-                deleteSelectedBtn.setAttribute('data-ids', Array.from(document.querySelectorAll('input[name="checkAll"]')).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value).join(',') );
+                deleteSelectedBtn.setAttribute('data-ids', Array.from(document.querySelectorAll('input[name="checkAll"]')).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value).join(','));
                 deleteSelectedBtn.hidden = !anyChecked;
             });
         });
@@ -237,7 +329,7 @@
                             }
                         }
                     );
-                    window.location.href += `/delete/${ids}` ;
+                    window.location.href += `/delete/${ids}`;
                 }
             });
         });

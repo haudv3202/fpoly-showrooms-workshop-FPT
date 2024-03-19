@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\domainController;
 use App\Http\Controllers\Admin\levelsController;
 use App\Http\Controllers\Admin\technicalsController;
 use App\Http\Controllers\Client\OurTeamController;
-use App\Http\Controllers\Client\projectsController;
+use App\Http\Controllers\Admin\projectsController as AdminProjectsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\HomeController;
@@ -65,6 +65,16 @@ Route::prefix('admin')->group(function(){
         Route::post('/edit',[levelsController::class,'update'])->name('admin.levels.update');
         Route::get('/delete/{ids}',[levelsController::class,'delete'])->name('admin.levels.delete');
         Route::post('search',[levelsController::class,'search'])->name('admin.levels.search');
+    });
+
+    Route::prefix('projects')->group(function(){
+        Route::get('/',[AdminProjectsController::class,'index'])->name('admin.projects.index');
+        Route::get('/create',[AdminProjectsController::class,'create'])->name('admin.projects.create');
+        Route::post('/create',[AdminProjectsController::class,'store'])->name('admin.projects.store');
+        Route::get('/edit/{id}',[AdminProjectsController::class,'edit'])->name('admin.projects.edit');
+        Route::post('/edit',[AdminProjectsController::class,'update'])->name('admin.projects.update');
+        Route::get('/delete/{ids}',[AdminProjectsController::class,'delete'])->name('admin.projects.delete');
+        Route::post('search',[AdminProjectsController::class,'search'])->name('admin.projects.search');
     });
 
 
