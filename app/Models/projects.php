@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class projects extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name','description', 'deploy_link', 'level_id','added_by','is_highlight','views','is_active', 'created_at','updated_at'];
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = ['name','description', 'deploy_link', 'level_id','added_by','views','is_active', 'created_at','updated_at'];
     public function users()
     {
         return $this->belongsToMany(User::class);

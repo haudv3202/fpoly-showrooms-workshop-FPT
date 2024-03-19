@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('deploy_link');
             $table->foreignIdFor(level::class);
             $table->json('added_by');
-            $table->boolean('is_highlight')->default(false);
             $table->integer('views')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->softDeletes('deleted_at');
             $table->timestamps();
         });
     }
