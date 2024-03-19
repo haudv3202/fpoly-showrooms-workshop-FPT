@@ -22,7 +22,9 @@ class projectsController extends Controller
 {
     public function index()
     {
-        $projects = projects::with('level')->paginate(10);
+        $projects = projects::withTrashed()->with(['level' => function ($query) {
+        $query->withTrashed();
+    }])->paginate(10);
         return view('admin.pages.projects.index', compact('projects'));
     }
 
@@ -64,8 +66,7 @@ class projectsController extends Controller
             'level' => 'required',
             'technicalsUse' => 'required',
             'domains' => 'required',
-            'members' => 'required',
-            'is_active' => 'required',
+            'members' => 'required'
         ], [
             'nameProject.required' => 'Không được để trống tên dự án',
             'description.required' => 'Không được để trống mô tả',
@@ -78,8 +79,7 @@ class projectsController extends Controller
             'level.required' => 'Không được để trống cấp độ',
             'technicalsUse.required' => 'Không được để trống kỹ thuật sử dụng',
             'domains.required' => 'Không được để trống lĩnh vực',
-            'members.required' => 'Không được để trống thành viên',
-            'is_active.required' => 'Không được để trống trạng thái hiển thị'
+            'members.required' => 'Không được để trống thành viên'
         ]);
         $data = [];
 
@@ -89,8 +89,7 @@ class projectsController extends Controller
             'deploy_link' => $request->linkDeloy,
             'level_id' => $request->level,
             'added_by' => json_encode($request->members),
-            'is_highlight' => empty($request->is_highlight) ? 0 : 1,
-            'is_active' => $request->is_active,
+            'is_active' => 0,
             'views' => 0,
             'created_at' => Carbon::now()
         ])->id;
@@ -180,8 +179,7 @@ class projectsController extends Controller
             'level' => 'required',
             'technicalsUse' => 'required',
             'domains' => 'required',
-            'members' => 'required',
-            'is_active' => 'required',
+            'members' => 'required'
         ], [
             'nameProject.required' => 'Không được để trống tên dự án',
             'description.required' => 'Không được để trống mô tả',
@@ -194,8 +192,7 @@ class projectsController extends Controller
             'level.required' => 'Không được để trống cấp độ',
             'technicalsUse.required' => 'Không được để trống kỹ thuật sử dụng',
             'domains.required' => 'Không được để trống lĩnh vực',
-            'members.required' => 'Không được để trống thành viên',
-            'is_active.required' => 'Không được để trống trạng thái hiển thị'
+            'members.required' => 'Không được để trống thành viên'
         ]);
 
         $project = projects::find($request->id);
@@ -204,8 +201,6 @@ class projectsController extends Controller
         $project->deploy_link = $request->linkDeloy;
         $project->level_id = $request->level;
         $project->added_by = json_encode($request->members);
-        $project->is_highlight = empty($request->is_highlight) ? 0 : 1;
-        $project->is_active = $request->is_active;
         $project->updated_at = Carbon::now();
         $project->save();
         $images = images::where('projects_id', $request->id)->get();
@@ -333,10 +328,8 @@ class projectsController extends Controller
     public function delete($ids)
     {
         $idsArr = explode(',', $ids);
+        projects::whereIn('id', $idsArr)->update(['is_active' => 1]);
         projects::destroy($idsArr);
-        project_domains::whereIn('projects_id', $idsArr)->delete();
-        technical_projects::whereIn('projects_id', $idsArr)->delete();
-        project_users::whereIn('projects_id', $idsArr)->delete();
         return redirect()->route('admin.projects.index');
     }
 

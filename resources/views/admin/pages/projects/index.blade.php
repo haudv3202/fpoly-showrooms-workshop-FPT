@@ -65,8 +65,9 @@
                                                     <div class="alert alert-danger h6 m-2">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                                <div class="col-lg-1 d-flex align-items-center justify-content-center"><i class="ri-arrow-left-right-line fs-5"></i></div>
-                                                <div  class="col-lg-4">
+                                                <div class="col-lg-1 d-flex align-items-center justify-content-center">
+                                                    <i class="ri-arrow-left-right-line fs-5"></i></div>
+                                                <div class="col-lg-4">
                                                     <input type="date" class="form-control ms-2" name="endDate"
                                                            value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->addDays(7)->format('Y-m-d') }}">
                                                     @error('endDate')
@@ -75,9 +76,11 @@
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <button type="submit" class="btn btn-danger ms-2" data-toast
-                                                            data-toast-text="Đã tải dữ liệu mới" data-toast-gravity="top"
+                                                            data-toast-text="Đã tải dữ liệu mới"
+                                                            data-toast-gravity="top"
                                                             data-toast-position="right" data-toast-duration="3000"
-                                                            data-toast-close="close"><i class="ri-search-line"></i></button>
+                                                            data-toast-close="close"><i class="ri-search-line"></i>
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -86,20 +89,20 @@
                                     </div>
 
                                 </div>
-{{--                                <div class="row mt-3">--}}
-{{--                                    <div class="col-lg-6">--}}
-{{--                                        <input type="text" class="form-control" name="projectName" placeholder="Tên dự án" value="{{ $projectName ?? '' }}">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-lg-6">--}}
-{{--                                        <select class="form-select" name="projectLevel">--}}
-{{--                                            <option value="">Chọn cấp độ dự án</option>--}}
-{{--                                            <option value="1" {{ isset($projectLevel) && $projectLevel == 1 ? 'selected' : '' }}>Cấp độ 1</option>--}}
-{{--                                            <option value="2" {{ isset($projectLevel) && $projectLevel == 2 ? 'selected' : '' }}>Cấp độ 2</option>--}}
-{{--                                            <!-- Thêm các option cho các cấp độ khác nếu cần thiết -->--}}
-{{--                                        </select>--}}
-{{--                                    </div>--}}
-{{--                                    --}}
-{{--                                </div>--}}
+                                {{--                                <div class="row mt-3">--}}
+                                {{--                                    <div class="col-lg-6">--}}
+                                {{--                                        <input type="text" class="form-control" name="projectName" placeholder="Tên dự án" value="{{ $projectName ?? '' }}">--}}
+                                {{--                                    </div>--}}
+                                {{--                                    <div class="col-lg-6">--}}
+                                {{--                                        <select class="form-select" name="projectLevel">--}}
+                                {{--                                            <option value="">Chọn cấp độ dự án</option>--}}
+                                {{--                                            <option value="1" {{ isset($projectLevel) && $projectLevel == 1 ? 'selected' : '' }}>Cấp độ 1</option>--}}
+                                {{--                                            <option value="2" {{ isset($projectLevel) && $projectLevel == 2 ? 'selected' : '' }}>Cấp độ 2</option>--}}
+                                {{--                                            <!-- Thêm các option cho các cấp độ khác nếu cần thiết -->--}}
+                                {{--                                        </select>--}}
+                                {{--                                    </div>--}}
+                                {{--                                    --}}
+                                {{--                                </div>--}}
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="{{ route('admin.projects.create') }}"
                                        class="btn btn-primary waves-effect waves-light">Thêm mới</a>
@@ -129,7 +132,6 @@
                                     <th>Lĩnh vực</th>
                                     <th>Lượt xem</th>
                                     <th>Trạng thái</th>
-                                    <th>Mức độ hiển thị</th>
                                     <th>Thời gian tạo</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -149,7 +151,8 @@
                                                 {{ $project->name }}
                                             </td>
                                             <td>
-                                                <a class="text-decoration-underline link-offset-3" href="{{ $project->deploy_link }}">{{ $project->name }}</a>
+                                                <a class="text-decoration-underline link-offset-3"
+                                                   href="{{ $project->deploy_link }}">{{ $project->name }}</a>
                                             </td>
                                             <td>
                                                 {{ $project->level->name }}
@@ -160,19 +163,22 @@
                                                     $users = \App\Models\User::whereIn('id', $members)->get();
                                                 @endphp
                                                 @forelse($users as $key => $member)
-                                                    <span class="badge bg-secondary">{{ $member->name }}</span>
+                                                    <span
+                                                        class="badge bg-secondary">{{ !empty($member->name) ? $member->name : ''  }}</span>
                                                 @empty
                                                     <span class="badge bg-secondary">Không có thành viên tham dự</span>
                                                 @endforelse
-
                                             </td>
 
                                             <td>
                                                 @php
-                                                    $technicals = \App\Models\technical_projects::with('technical')->where('projects_id', $project->id)->get();
+                                                    $technicals = \App\Models\technical_projects::with(['technical' => function ($query) {
+                                                        $query->withTrashed();
+                                                    }])->where('projects_id', $project->id)->get();
                                                 @endphp
                                                 @forelse($technicals as $key => $technical)
-                                                    <span class="badge bg-secondary">{{ $technical->technical->name }}</span>
+                                                    <span
+                                                        class="badge bg-secondary">{{ !empty($technical->technical->name) ? $technical->technical->name : ''  }}</span>
                                                 @empty
                                                     <span class="badge bg-secondary">Không có công nghệ sử dụng</span>
                                                 @endforelse
@@ -181,10 +187,13 @@
 
                                             <td>
                                                 @php
-                                                    $domains = \App\Models\project_domains::with('domain')->where('projects_id', $project->id)->get();
+                                                    $domains = \App\Models\project_domains::with(['domain' => function ($query) {
+                                                        $query->withTrashed();
+                                                    }])->where('projects_id', $project->id)->get();
                                                 @endphp
                                                 @forelse($domains as $key => $domain)
-                                                    <span class="badge bg-secondary">{{ $domain->domain->name }}</span>
+                                                    <span
+                                                        class="badge bg-secondary">{{  !empty($domain->domain->name) ? $domain->domain->name : '' }}</span>
                                                 @empty
                                                     <span class="badge bg-secondary">Không thuộc lĩnh vực nào</span>
                                                 @endforelse
@@ -196,16 +205,9 @@
 
                                             <td>
                                                 @if($project->is_active == 0)
-                                                    <span class="badge bg-success">Đã Hoàn thành</span>
+                                                    <span class="badge bg-success">Đang hoạt động</span>
                                                 @else
-                                                    <span class="badge bg-danger">Chưa Hoàn thành</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($project->is_highlight == 0)
-                                                    <span class="badge bg-warning">Ẩn</span>
-                                                @else
-                                                    <span class="badge bg-primary">Hiện</span>
+                                                    <span class="badge bg-danger">Đã xóa</span>
                                                 @endif
                                             </td>
                                             <td>{{ \Illuminate\Support\Carbon::parse($project->created_at)->format('d M, Y') }}</td>

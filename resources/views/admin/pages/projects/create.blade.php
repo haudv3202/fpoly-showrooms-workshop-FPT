@@ -198,46 +198,35 @@
                                     @enderror
                                 </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-lg-3">
-                                        <label for="nameInput" class="form-label">Trạng thái dự án</label>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <!-- Switches Color -->
-                                        <div  class="d-flex">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="is_active" value="1" id="is_active1" >
-                                                <label class="form-check-label" for="is_active1">
-                                                    Chưa thực hiện
-                                                </label>
-                                            </div>
+{{--                                <div class="row mb-3">--}}
+{{--                                    <div class="col-lg-3">--}}
+{{--                                        <label for="nameInput" class="form-label">Trạng thái dự án</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-9">--}}
+{{--                                        <!-- Switches Color -->--}}
+{{--                                        <div  class="d-flex">--}}
+{{--                                            <div class="form-check">--}}
+{{--                                                <input class="form-check-input" type="radio" name="is_active" value="1" id="is_active1" >--}}
+{{--                                                <label class="form-check-label" for="is_active1">--}}
+{{--                                                    Chưa thực hiện--}}
+{{--                                                </label>--}}
+{{--                                            </div>--}}
 
-                                            <div class="form-check ms-2">
-                                                <input class="form-check-input" type="radio" name="is_active" value="0" id="is_active2" checked>
-                                                <label class="form-check-label" for="is_active2">
-                                                    Đã hoàn thành
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @error('is_active')
-                                    <div class="col-lg-12">
-                                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                                    </div>
-                                    @enderror
-                                </div>
+{{--                                            <div class="form-check ms-2">--}}
+{{--                                                <input class="form-check-input" type="radio" name="is_active" value="0" id="is_active2" checked>--}}
+{{--                                                <label class="form-check-label" for="is_active2">--}}
+{{--                                                    Đã hoàn thành--}}
+{{--                                                </label>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    @error('is_active')--}}
+{{--                                    <div class="col-lg-12">--}}
+{{--                                        <div class="alert alert-danger mt-2">{{ $message }}</div>--}}
+{{--                                    </div>--}}
+{{--                                    @enderror--}}
+{{--                                </div>--}}
 
-                                <div class="row mb-3">
-                                    <div class="col-lg-3">
-                                        <label for="nameInput" class="form-label">Hiển thị dự án</label>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <!-- Switches Color -->
-                                        <div class="form-check form-switch form-switch-lg" dir="ltr">
-                                            <input type="checkbox" class="form-check-input" id="customSwitchsizelg" name="is_highlight" checked>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="text-end">
                                     <button  type="button" class="btn btn-danger" onclick="window.location.href='{{ route('admin.projects.index') }}'"><i class="ri-arrow-go-back-line">Trở về</i></button>
