@@ -101,18 +101,19 @@
                                         <label for="nameInput" class="form-label">Ảnh mô tả</label>
                                     </div>
                                     <div class="col-lg-9">
+
                                         <input type="file" class="filepond filepond-input-multiple" multiple
                                                name="imagesDescription[]" data-allow-reorder="true"
                                                data-max-file-size="5MB" data-max-files="5">
+                                        <input type="hidden" name="oldImagesDescription" value="{{ $imagesDesOld}}">
                                         <ul class="list-unstyled mb-0" id="dropzone-preview">
-                                            <li class="mt-2" id="dropzone-preview-list">
-                                                <!-- This is used as the file preview template -->
-                                                <div class="border rounded">
+                                            @forelse($imagesDes as $desimg)
+                                                <div class="border rounded" id="desimg-{{ $desimg->id }}">
                                                     <div class="d-flex p-2">
                                                         <div class="flex-shrink-0 me-3">
                                                             <div class="avatar-sm bg-light rounded">
                                                                 <img data-dz-thumbnail class="img-fluid rounded d-block"
-                                                                     src="{{ asset('theme/admin/assets/images/new-document.png') }}"
+                                                                     src="{{  \Illuminate\Support\Facades\Storage::url('description/' .$desimg->image) }}"
                                                                      alt="Dropzone-Image"/>
                                                             </div>
                                                         </div>
@@ -125,27 +126,36 @@
                                                             </div>
                                                         </div>
                                                         <div class="flex-shrink-0 ms-3">
-                                                            <button data-dz-remove class="btn btn-sm btn-danger">
+                                                            <button type="button"  class="btn btn-sm btn-danger btn-remove-image-des" data-id="{{ $desimg->id }}">
                                                                 Delete
                                                             </button>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="row">
-                                            @forelse($imagesDes as $desimg)
-                                                <div class="col-lg-2">
-                                                    <img
-                                                        src="{{  \Illuminate\Support\Facades\Storage::url('description/' .$desimg->image) }}"
-                                                        style="object-fit: cover;" alt="" class="rounded avatar-xl">
                                                 </div>
                                             @empty
                                                 <div class="col-lg-12">
                                                     <div class="alert alert-danger mt-2">Không có ảnh mô tả</div>
                                                 </div>
                                             @endforelse
-                                        </div>
+                                            <li class="mt-2" id="dropzone-preview-list">
+                                                <!-- This is used as the file preview template -->
+
+
+                                            </li>
+                                        </ul>
+{{--                                        <div class="row">--}}
+{{--                                            @forelse($imagesDes as $desimg)--}}
+{{--                                                <div class="col-lg-2">--}}
+{{--                                                    <img--}}
+{{--                                                        src="{{  \Illuminate\Support\Facades\Storage::url('description/' .$desimg->image) }}"--}}
+{{--                                                        style="object-fit: cover;" alt="" class="rounded avatar-xl">--}}
+{{--                                                </div>--}}
+{{--                                            @empty--}}
+{{--                                                <div class="col-lg-12">--}}
+{{--                                                    <div class="alert alert-danger mt-2">Không có ảnh mô tả</div>--}}
+{{--                                                </div>--}}
+{{--                                            @endforelse--}}
+{{--                                        </div>--}}
                                     </div>
                                     @error('imagesDescription')
                                     <div class="col-lg-12">
@@ -299,6 +309,7 @@
     </div>
 @endsection
 @push('scripts')
+
     <script src="{{ asset('theme/admin/assets/libs/prismjs/prism.js') }}"></script>
 
     <script src="{{ asset('theme/admin/assets/libs/dropzone/dropzone-min.js') }}"></script>
@@ -322,4 +333,23 @@
 
     <!-- init js -->
     <script src="{{ asset('theme/admin/assets/js/pages/form-editor.init.js') }}"></script>
+    <script>
+        const btnRemoves = document.querySelectorAll('.btn-remove-image-des');
+        const inputImageOld = document.querySelector('input[name=oldImagesDescription]');
+        console.log(inputImageOld.value);
+        btnRemoves.forEach(btnRemove => {
+            btnRemove.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const rowImageOld = document.getElementById('desimg-' + id);
+                rowImageOld.remove();
+                let array = inputImageOld.value.split(',');
+                let index = array.indexOf(id);
+                if (index !== -1) {
+                    array.splice(index, 1);
+                }
+                inputImageOld.value = array.join(',')
+                console.log(inputImageOld.value);
+            });
+        });
+    </script>
 @endpush

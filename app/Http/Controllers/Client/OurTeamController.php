@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class OurTeamController extends Controller
 {
     public function index(){
-        return view('clients.pages.ourTeam');
+        $allUser = User::paginate(9);
+        return view('clients.pages.ourTeam',compact('allUser'));
     }
 
-    public function single(){
-        return view('clients.pages.teamSingle');
+    public function single($id){
+        $member = User::find($id);
+        return view('clients.pages.teamSingle',compact('member'));
     }
 }

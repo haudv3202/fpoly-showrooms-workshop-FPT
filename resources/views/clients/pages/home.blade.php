@@ -206,57 +206,37 @@
                     </div>
                 </div>
                 <div class="row">
+                    @forelse($projects as $project)
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="portfolio-gallery-item">
+                            @php
+                                $image = \App\Models\images::where([['is_active',0],['type',1],['projects_id',$project->id]])->first();
+                                $domains = \App\Models\project_domains::with(['domain' => function($qr){
+                                  $qr->withTrashed();
+                                }])->where('projects_id',$project->id)->get();
+                            @endphp
                             <div class="item-img">
-                                <div class="portfolio-img-gallery"><a href="{{ asset('theme/client/assets/images/portfolio/portfolio_img_1.jpg') }}"
+                                <div class="portfolio-img-gallery"><a href="{{ \Illuminate\Support\Facades\Storage::url('images/projects/avatar/' .$image->image) }}"
                                                                       class="portfolio-img-gallery" title="Title Come here"><img
-                                            src="{{ asset('theme/client/assets/images/portfolio/portfolio_img_1.jpg') }}" class="rounded" alt></a>
+                                            src="{{ \Illuminate\Support\Facades\Storage::url('images/projects/avatar/' .$image->image) }}" class="rounded" alt></a>
                                     <div class="img-over"><i class="bi bi-plus-lg"></i></div>
-                                </div><a href="portfolio-single.html" class="arrow"><i class="srn-arrow-right"></i></a>
+                                </div><a href="{{ route('single',$project->id) }}" class="arrow"><i class="srn-arrow-right"></i></a>
                             </div>
                             <div class="item-content">
-                                <h6><a href="portfolio-single.html">Global revenue</a></h6>
-                                <div class="sub-head">It Services & Consultancy</div>
-                                <p>We use the latest technologies it voluptatem accusantium We do this by discerning the
-                                    ships</p>
+                                <h6><a href="{{ route('single',$project->id) }}">{{ $project->name }}</a></h6>
+                                <div class="sub-head">
+                                    @forelse($domains as $key => $valueDomain)
+                                        <a href="{{ route('projects') }}?domain={{  to_slug($valueDomain->domain->name) }}" class="sub-head link-redirect">{{ $valueDomain->domain->name }}</a>{{ $loop->last ? '' : ' & ' }}
+                                    @empty
+                                    @endforelse
+                                    </div>
+{{--                                <p>We use the latest technologies it voluptatem accusantium We do this by discerning the--}}
+{{--                                    ships</p>--}}
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="portfolio-gallery-item">
-                            <div class="item-img">
-                                <div class="portfolio-img-gallery"><a href="{{ asset('theme/client/assets/images/portfolio/portfolio_img_2.jpg') }}"
-                                                                      class="portfolio-img-gallery" title="Title Come here"><img
-                                            src="{{ asset('theme/client/assets/images/portfolio/portfolio_img_2.jpg') }}" class="rounded" alt></a>
-                                    <div class="img-over"><i class="bi bi-plus-lg"></i></div>
-                                </div><a href="portfolio-single.html" class="arrow"><i class="srn-arrow-right"></i></a>
-                            </div>
-                            <div class="item-content">
-                                <h6><a href="portfolio-single.html">Global revenue</a></h6>
-                                <div class="sub-head">It Services & Consultancy</div>
-                                <p>We use the latest technologies it voluptatem accusantium We do this by discerning the
-                                    ships</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mx-auto">
-                        <div class="portfolio-gallery-item">
-                            <div class="item-img">
-                                <div class="portfolio-img-gallery"><a href="{{ asset('theme/client/assets/images/portfolio/portfolio_img_3.jpg') }}"
-                                                                      class="portfolio-img-gallery" title="Title Come here"><img
-                                            src="{{ asset('theme/client/assets/images/portfolio/portfolio_img_3.jpg') }}" class="rounded" alt></a>
-                                    <div class="img-over"><i class="bi bi-plus-lg"></i></div>
-                                </div><a href="portfolio-single.html" class="arrow"><i class="srn-arrow-right"></i></a>
-                            </div>
-                            <div class="item-content">
-                                <h6><a href="portfolio-single.html">Global revenue</a></h6>
-                                <div class="sub-head">It Services & Consultancy</div>
-                                <p>We use the latest technologies it voluptatem accusantium We do this by discerning the
-                                    ships</p>
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                    @endforelse
                 </div>
             </div>
         </section>

@@ -22,10 +22,18 @@ class projects extends Model
     }
 
     public function technical(){
-        return $this->hasMany(technical_projects::class, 'id', 'projects_id');
+        return $this->hasMany(technical_projects::class, 'projects_id', 'id');
     }
 
     public function domain(){
-        return $this->hasOne(level::class, 'id', 'level_id');
+        return $this->hasOne(project_domains::class, 'projects_id', 'id');
+    }
+
+    public function domains(){
+        return $this->hasMany(project_domains::class, 'projects_id', 'id');
+    }
+
+    public function images(){
+        return $this->hasMany(images::class, 'projects_id', 'id');
     }
 }

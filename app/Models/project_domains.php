@@ -14,4 +14,10 @@ class project_domains extends Model
     {
         return $this->hasOne(domains::class, 'id', 'domains_id');
     }
+
+
+    public function project()
+    {
+        return $this->hasMany(projects::class, 'id', 'projects_id');
+    }
 }

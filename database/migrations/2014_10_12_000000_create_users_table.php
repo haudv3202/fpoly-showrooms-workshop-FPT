@@ -20,6 +20,7 @@ return new class extends Migration
             $table->tinyInteger('role')->default(0); // 0: author, 1: admin
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

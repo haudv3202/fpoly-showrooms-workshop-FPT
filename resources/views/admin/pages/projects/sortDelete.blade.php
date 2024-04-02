@@ -50,95 +50,17 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- Input Date -->
-                                <div class="d-flex align-items-center " style="flex:1;">
+                                <div class="d-flex align-items-center ">
                                     <button type="button" class="btn btn-success waves-effect waves-light "
                                             id="btnSearch"><i class="ri-filter-2-fill"></i></button>
-                                    <div id="dateSearch" class="px-2" style="flex:1;" hidden>
-                                        <form action="{{ route('admin.projects.search') }}" method="POST"
-                                         >
+                                    <div id="dateSearch" hidden>
+                                        <form action="{{ route('admin.projects.searchDelete') }}" method="POST"
+                                              class="d-flex align-items-center">
                                             @csrf
-                                            <div class="row mb-2">
-                                                <div class="col-lg-12">
-                                                    <!-- Input with Label -->
-                                                    <input type="text" name="nameProject" class="form-control" value="{{ !empty($nameProjectOld) ? $nameProjectOld : ''  }}" placeholder="Tên dự án">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-lg-12">
-                                                    <!-- Input with Label -->
-                                                        <label for="labelInput" class="form-label">Người thực hiện</label>
-                                                    <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem name="author[]" multiple>
-                                                        @forelse($users as $key => $user)
-                                                            @if(!empty($authorOld))
-                                                                @forelse($authorOld as $key1 => $authorOldItem)
-                                                                    <option value="{{ $user->id }}" {{ $authorOldItem == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                                                                @empty
-                                                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                                @endforelse
-                                                            @else
-                                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                            @endif
-                                                        @empty
-                                                            <option value="">Không có người thực hiện</option>
-                                                        @endforelse
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-2">
-                                                <div class="col-lg-12">
-                                                    <label for="labelInput" class="form-label">Công nghệ dự án</label>
-                                                    <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem name="technical[]" multiple>
-                                                        @forelse($technicals as $key => $technical)
-                                                            @if(!empty($technicalOld))
-                                                                @forelse($technicalOld as $key1 => $technicalOldItem)
-                                                                    <option value="{{ $technical->id }}" {{ $technicalOldItem == $technical->id ? 'selected' : '' }}>{{ $technical->name }}</option>
-                                                                @empty
-                                                                    <option value="{{ $technical->id }}">{{ $technical->name }}</option>
-                                                                @endforelse
-                                                            @else
-                                                            <option value="{{ $technical->id }}">{{ $technical->name }}</option>
-                                                            @endif
-                                                        @empty
-                                                            <option value="">Không có công nghệ</option>
-                                                        @endforelse
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-lg-12">
-                                                    <label for="labelInput" class="form-label">Lĩnh vực dự án</label>
-                                                    <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem name="domains[]" multiple>
-                                                        @forelse($domains as $key => $domain)
-                                                            @if(!empty($domainOld))
-                                                                @forelse($domainOld as $key1 => $domainOldItem)
-                                                                    <option value="{{ $domain->id }}" {{ $domainOldItem == $domain->id ? 'selected' : '' }}>{{ $domain->name }}</option>
-                                                                @empty
-                                                                    <option value="{{ $domain->id }}">{{ $domain->name }}</option>
-                                                                @endforelse
-                                                            @else
-                                                                <option value="{{ $domain->id }}">{{ $domain->name }}</option>
-                                                            @endif
-                                                        @empty
-                                                            <option value="">Không có lĩnh vực</option>
-                                                        @endforelse
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb- align-items-center mb-2">
-                                                <div class="col-lg-3">
-                                                    <select class="js-example-basic-single" name="level">
-                                                        @forelse($levels as $key => $level)
-                                                            <option value="{{ $level->id }}" {{ !empty($levelOld) && $levelOld == $level->id ? 'selected' : '' }}>{{ $level->name }}</option>
-                                                        @empty
-                                                            <option value="">Không có cấp độ</option>
-                                                        @endforelse
-                                                    </select>
-                                                </div>
+                                            <div class="row">
                                                 <div class="col-lg-4">
                                                     <input type="date" class="form-control ms-2" name="startDate"
-                                                           value="{{ !empty($startDate) ? \Illuminate\Support\Carbon::parse($startDate)->format('Y-m-d') : "" }}">
+                                                           value="{{ !empty($startDate) ? \Illuminate\Support\Carbon::parse($startDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->format('Y-m-d') }}">
                                                     @error('startDate')
                                                     <div class="alert alert-danger h6 m-2">{{ $message }}</div>
                                                     @enderror
@@ -147,16 +69,13 @@
                                                     <i class="ri-arrow-left-right-line fs-5"></i></div>
                                                 <div class="col-lg-4">
                                                     <input type="date" class="form-control ms-2" name="endDate"
-                                                           value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : "" }}">
+                                                           value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->addDays(7)->format('Y-m-d') }}">
                                                     @error('endDate')
                                                     <div class="alert alert-danger h6 m-2">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12 ">
-                                                    <button type="submit" class="btn btn-danger w-100" data-toast
+                                                <div class="col-lg-3">
+                                                    <button type="submit" class="btn btn-danger ms-2" data-toast
                                                             data-toast-text="Đã tải dữ liệu mới"
                                                             data-toast-gravity="top"
                                                             data-toast-position="right" data-toast-duration="3000"
@@ -164,8 +83,6 @@
                                                     </button>
                                                 </div>
                                             </div>
-
-
 
                                         </form>
 
@@ -187,12 +104,10 @@
                                 {{--                                    --}}
                                 {{--                                </div>--}}
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('admin.projects.create') }}"
-                                       class="btn btn-primary waves-effect waves-light">Thêm mới</a>
-                                    <button type="button" onclick="window.location.href='{{ route('admin.projects.sortDeleteRecord') }}'" class="btn ms-2 btn-warning waves-effect waves-light"
-                                           ><i class="ri-install-fill me-2"></i>Thùng rác</button>
-                                    <button type="button" hidden class="btn ms-2 btn-danger waves-effect waves-light"
-                                            id="deleteSelectedBtn"><i class="ri-delete-bin-line"></i></button>
+                                    <a href="{{ route('admin.projects.index') }}"
+                                       class="btn btn-danger waves-effect waves-light">Trở về</a>
+                                    <button type="button" hidden class="btn ms-2 btn-warning waves-effect waves-light"
+                                            id="deleteSelectedBtn"><i class="ri-restart-line"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -309,11 +224,11 @@
                                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                                 Edit</a></li>
                                                         <li>
-
-                                                            <a class="dropdown-item remove-item-btn btnDelete"
+                                                        <li>
+                                                            <a class="dropdown-item remove-item-btn btnRestore"
                                                                data-id="{{$project->id}}">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                                Delete
+                                                                <i class=" ri-restart-line align-bottom me-2 text-muted"></i>
+                                                                Restore
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -353,6 +268,7 @@
 
     <script src="{{ asset('theme/admin/assets/js/pages/select2.init.js') }}"></script>
     <script>
+        // Delete
         const btnSearch = document.querySelector('#btnSearch');
         const dateSearch = document.querySelector('#dateSearch');
 
@@ -398,24 +314,24 @@
         deleteSelectedBtn.addEventListener('click', function () {
             const ids = this.getAttribute('data-ids');
             Swal.fire({
-                title: 'Bạn có chắc chắn muốn xóa không?',
-                text: "Dữ liệu sẽ không thể khôi phục lại sau khi xóa!",
+                title: 'Bạn có chắc chắn muốn khôi phục không?',
+                text: "Dữ liệu sẽ được khôi phục lại!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Xóa'
+                confirmButtonText: 'Khôi phục'
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire(
                         {
-                            title: 'Đang xóa...',
+                            title: 'Đang khôi phục...',
                             onBeforeOpen: () => {
                                 Swal.showLoading();
                             }
                         }
                     );
-                    window.location.href += `/delete/${ids}`;
+                    window.location.href += `/restore/${ids}` ;
                 }
             });
         });

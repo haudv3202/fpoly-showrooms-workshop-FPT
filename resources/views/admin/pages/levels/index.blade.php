@@ -84,6 +84,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="{{ route('admin.levels.create') }}"
                                        class="btn btn-primary waves-effect waves-light">Thêm mới</a>
+                                    <button type="button" onclick="window.location.href='{{ route('admin.levels.sortDeleteRecord') }}'" class="btn ms-2 btn-warning waves-effect waves-light"
+                                    ><i class="ri-install-fill me-2"></i>Thùng rác</button>
                                     <button type="button"  hidden class="btn ms-2 btn-danger waves-effect waves-light" id="deleteSelectedBtn">  <i class="ri-delete-bin-line"></i> </button>
                                 </div>
 

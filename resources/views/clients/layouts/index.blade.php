@@ -64,16 +64,28 @@
     @yield('content')
     @include('clients.layouts.footer')
 <div class="overlay overlay-hugeinc">
-    <form class="form-inline mt-2 mt-md-0">
+    <form id="searchForm"  action="{{ route('search') }}" method="post" class="form-inline mt-2 mt-md-0">
+        @csrf
         <div class="form-inner">
             <div class="form-inner-div hstack"><i class="srn-search"></i>
-                <div class="w-100"><input class="form-control form-light" type="text" placeholder="Search"
+                <div class="w-100"><input id="searchInput" name="nameSearch" class="form-control form-light" type="text" placeholder="Search"
                                           aria-label="Search"></div><a href="#" class="overlay-close link-oragne"><i
                         class="bi bi-x"></i></a>
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("searchInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Prevent default form submission
+                document.getElementById("searchForm").submit(); // Submit the form
+            }
+        });
+    });
+</script>
 <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script src="{{ asset('theme/client/assets/js/scripts.min.js') }}"></script>
 <script defer

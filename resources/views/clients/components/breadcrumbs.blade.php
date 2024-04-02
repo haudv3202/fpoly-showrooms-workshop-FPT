@@ -1,7 +1,7 @@
 @section('components')
     <section class="breadcrumbs-page">
         <div class="container">
-            <h1>Portfolio Single</h1>
+            <h1>@yield('namePages')</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -14,7 +14,7 @@
                         class="breadcrumb-item active"
                         aria-current="page"
                     >
-                        Portfolio Single
+                        @yield('namePages')
                     </li>
                 </ol>
             </nav>

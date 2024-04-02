@@ -22,14 +22,82 @@ class projectsController extends Controller
 {
     public function index()
     {
-        $projects = projects::withTrashed()->with(['level' => function ($query) {
+        $projects = projects::with(['level' => function ($query) {
         $query->withTrashed();
     }])->paginate(10);
-        return view('admin.pages.projects.index', compact('projects'));
+        $levels = level::all();
+        $users = User::all();
+        $technicals = technicals::all();
+        $domains = domains::all();
+        return view('admin.pages.projects.index', compact('projects','levels','users','technicals','domains'));
+    }
+
+    public function sortDelete(){
+        $projects = projects::onlyTrashed()->with(['level' => function ($query) {
+            $query->withTrashed();
+        }])->paginate(10);
+        return view('admin.pages.projects.sortDelete', compact('projects'));
     }
 
     public function search(Request $request)
     {
+        $query = projects::query();
+
+        // Áp dụng các điều kiện tìm kiếm dựa trên các tham số gửi từ form
+        $nameProjectOld = "";
+        if ($request->filled('nameProject')) {
+            $nameProjectOld = $request->input('nameProject');
+            $query->where('name', 'like', '%' . $nameProjectOld . '%');
+        }
+
+        $levelOld = "";
+        if ($request->filled('level')) {
+            $levelOld = $request->input('level');
+            $query->where('level_id', $levelOld);
+        }
+
+        $authorOld = "";
+        if ($request->filled('author')) {
+            $authorOld = $request->input('author');
+            $query->where('added_by', 'like', '%' . json_encode($authorOld) . '%');
+        }
+
+        $technicalOld = "";
+        if ($request->filled('technical')) {
+            $technicalOld = $request->input('technical');
+            $query->orWhereHas('technical', function ($q) use ($technicalOld) {
+                $q->whereIn('technicals_id', $technicalOld);
+            });
+        }
+
+
+        $domainOld = "";
+        if ($request->filled('domains')) {
+            $domainOld = $request->input('domains');
+            $query->whereHas('domain', function ($q) use ($domainOld) {
+                $q ->orWhereIn('domains_id', $domainOld);
+            });
+        }
+
+        $startDate = "";
+        $endDate = "";
+        if ($request->filled('startDate') && $request->filled('endDate')) {
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+        // Thực hiện truy vấn và paginate kết quả
+        $projects = $query->with(['level' => function ($query) {
+            $query->withTrashed();
+        }])->paginate(10);
+        $levels = level::all();
+        $users = User::all();
+        $technicals = technicals::all();
+        $domains = domains::all();
+        return view('admin.pages.projects.index', compact('projects', 'startDate', 'endDate','levels','users','technicals','domains','nameProjectOld','levelOld','authorOld','technicalOld','domainOld'));
+    }
+
+    public function searchSortDelete(Request $request){
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $request->validate([
@@ -41,9 +109,11 @@ class projectsController extends Controller
             'endDate.required' => 'Không được để trống ngày kết thúc',
             'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
         ]);
-        $projects = projects::with('level')->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
+        $projects = projects::onlyTrashed()->with(['level' => function ($query) {
+            $query->withTrashed();
+        }])->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
 
-        return view('admin.pages.projects.index', compact('projects', 'startDate', 'endDate'));
+        return view('admin.pages.projects.sortDelete', compact('projects', 'startDate', 'endDate'));
     }
 
     public function create()
@@ -153,20 +223,24 @@ class projectsController extends Controller
         $technicals = technicals::all();
         $domains = domains::all();
         $users = User::all();
-        $project = projects::find($id);
+        $project = projects::withTrashed()->find($id);
         $images = images::where('projects_id', $id)->get();
 
         $imagesDes = $images->filter(function ($item) {
             return $item->type == 2;
         });
+        $imagesDesOld = [];
+        foreach ($imagesDes as $item) {
+            $imagesDesOld[] = $item->id;
+        }
+        $imagesDesOld = implode(',', $imagesDesOld);
         $avatar = $images->filter(function ($item) {
             return $item->type == 1;
         })->first();
-
         $technicalUse = technical_projects::where('projects_id', $id)->get();
         $domainProjects = project_domains::where('projects_id', $id)->get();
         $members = project_users::with('users')->whereIn('author_id', json_decode($project->added_by))->get();
-        return view('admin.pages.projects.edit', compact('levels', 'technicals', 'domains', 'users', 'project', 'imagesDes', 'avatar', 'technicalUse', 'domainProjects', 'members'));
+        return view('admin.pages.projects.edit', compact('levels', 'technicals', 'domains', 'users', 'project', 'imagesDes', 'avatar', 'technicalUse', 'domainProjects', 'members','imagesDesOld'));
     }
 
     public function update(Request $request)
@@ -195,7 +269,7 @@ class projectsController extends Controller
             'members.required' => 'Không được để trống thành viên'
         ]);
 
-        $project = projects::find($request->id);
+        $project = projects::withTrashed()->find($request->id);
         $project->name = $request->nameProject;
         $project->description = $request->description;
         $project->deploy_link = $request->linkDeloy;
@@ -212,7 +286,26 @@ class projectsController extends Controller
         $imagesDes = $images->filter(function ($item) {
             return $item->type == 2;
         });
+        $imagesDesOld = $imagesDes->map(function ($item) {
+            return $item->id;
+        })->toArray();
+        $imageOld = $request->oldImagesDescription;
+        $imageOld = explode(',', $imageOld);
+        $imageOld = array_map('intval', $imageOld);
+        $imagediff = array_diff($imagesDesOld,$imageOld);
+        if(!empty($imagediff)) {
+//            $image = images::whereIn('id', $imagediff)->get();
+//            foreach ($image as $item) {
+//                Storage::delete('public/description/' . $item->image);
+//            }
+//            $image->delete();
+            Storage::delete(images::whereIn('id', $imagediff)->pluck('image')->map(function($imageName) {
+                return 'public/description/' . $imageName;
+            })->toArray());
 
+// Xóa các hình ảnh từ cơ sở dữ liệu
+            images::whereIn('id', $imagediff)->delete();
+        }
 
         if ($request->hasFile('imageProjectAvatar')) {
             Storage::delete('public/images/projects/avatar/' . $avatar->image);
@@ -223,15 +316,14 @@ class projectsController extends Controller
         }
 
         if (!empty($request->imagesDescription)) {
-            foreach ($imagesDes as $item) {
-                Storage::delete('public/description/' . $item);
-                $item->delete();
-            }
+//            foreach ($imagesDes as $item) {
+//                Storage::delete('public/description/' . $item);
+//                $item->delete();
+//            }
             $data = [];
             foreach ($request->imagesDescription as $itemDes) {
                 $imagesFile = json_decode($itemDes);
                 $extension = pathinfo($imagesFile->name, PATHINFO_EXTENSION);   // .jpg .png .pdf
-
                 $itemDesName = Str::random(10) . '.' . $extension;
                 $data[] = [
                     'image' => $itemDesName,
@@ -331,6 +423,14 @@ class projectsController extends Controller
         projects::whereIn('id', $idsArr)->update(['is_active' => 1]);
         projects::destroy($idsArr);
         return redirect()->route('admin.projects.index');
+    }
+
+    public function restore($ids)
+    {
+        $idsArr = explode(',', $ids);
+        projects::withTrashed()->whereIn('id', $idsArr)->update(['is_active' => 0]);
+        projects::withTrashed()->whereIn('id', $idsArr)->restore();
+        return redirect()->route('admin.projects.sortDeleteRecord');
     }
 
     function array_equal($a, $b) {

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\images;
 use Illuminate\Support\Facades\Storage;
-
+use Intervention\Image\Image;
 class AdminBannerController extends Controller
 {
     public function index(){

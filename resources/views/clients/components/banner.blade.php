@@ -2,20 +2,18 @@
 <div class="container home-default-banner mt-2">
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            @forelse($banners as $key => $value)
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : ''}}" aria-current="true" aria-label="Slide {{ $key }}"></button>
+            @empty
+            @endforelse
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="https://caodang.fpt.edu.vn/wp-content/uploads/2024/01/1900x750px-copy.jpg" alt="...">
+            @forelse($banners as $key => $value)
+            <div class="carousel-item {{ $key == 0 ? 'active' : ''}}">
+                <img src="{{ \Illuminate\Support\Facades\Storage::url('images/banner/' .$value->image) }}" width="1280" height="505" alt="...">
             </div>
-            <div class="carousel-item">
-                <img src="https://caodang.fpt.edu.vn/wp-content/uploads/2024/01/1900x750_Trac-nghiem.png" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="https://caodang.fpt.edu.vn/wp-content/uploads/2024/01/1900x750_60-phut.png" class="d-block w-100" alt="...">
-            </div>
+            @empty
+            @endforelse
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

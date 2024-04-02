@@ -1,6 +1,7 @@
 @extends('clients.layouts.index')
 @section('title',"Thành viên của chúng tôi")
 @section('color-header',"bg-primary header-bg")
+@section('namePages',"Thành viên của chúng tôi")
 @include('clients.components.breadcrumbs')
 @section('content')
     <main id="body-content">
@@ -25,22 +26,23 @@
                     </div>
                 </div>
                 <div class="row">
+                    @forelse($allUser as $member)
                     <div class="col-md-6 col-xl-4 col-lg-6">
                         <div class="team-wrap">
                             <div class="img">
-                                <a href="team-single.html"
+                                <a href="{{ route('teamSingle',$member->id) }}"
                                 ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_1') }}.jpg"
+                                        src="{{ \Illuminate\Support\Facades\Storage::url('images/member/avatar/' .$member->avatar) }}"
                                         alt
                                     /></a>
                             </div>
                             <div class="content">
                                 <h6>
-                                    <a href="team-single.html"
-                                    >Richard Simpson</a
+                                    <a href="{{ route('teamSingle',$member->id) }}"
+                                    >{{ $member->name }}</a
                                     >
                                 </h6>
-                                <div class="post">VP of Engineering</div>
+{{--                                <div class="post">VP of Engineering</div>--}}
                                 <ul class="list-unstyled social-icons">
                                     <li>
                                         <a href="javascript:"
@@ -69,7 +71,7 @@
                                     </li>
                                 </ul>
                                 <div class="arrow-read-more">
-                                    <a href="team-single.html"
+                                    <a href="{{ route('teamSingle',$member->id) }}"
                                     >read more
                                         <i class="srn-arrow-right"></i
                                         ></a>
@@ -77,266 +79,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-xl-4 col-lg-6">
-                        <div class="team-wrap">
-                            <div class="img">
-                                <a href="team-single.html"
-                                ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_2') }}.jpg"
-                                        alt
-                                    /></a>
-                            </div>
-                            <div class="content">
-                                <h6>
-                                    <a href="team-single.html"
-                                    >Louis Crawford</a
-                                    >
-                                </h6>
-                                <div class="post">Human Resources</div>
-                                <ul class="list-unstyled social-icons">
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-facebook"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-twitter-x"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-instagram"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-linkedin"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-youtube"></i
-                                            ></a>
-                                    </li>
-                                </ul>
-                                <div class="arrow-read-more">
-                                    <a href="team-single.html"
-                                    >read more
-                                        <i class="srn-arrow-right"></i
-                                        ></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4 col-lg-6">
-                        <div class="team-wrap">
-                            <div class="img">
-                                <a href="team-single.html"
-                                ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_3') }}.jpg"
-                                        alt
-                                    /></a>
-                            </div>
-                            <div class="content">
-                                <h6>
-                                    <a href="team-single.html"
-                                    >Peter White</a
-                                    >
-                                </h6>
-                                <div class="post">Employee Resources</div>
-                                <ul class="list-unstyled social-icons">
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-facebook"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-twitter-x"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-instagram"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-linkedin"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-youtube"></i
-                                            ></a>
-                                    </li>
-                                </ul>
-                                <div class="arrow-read-more">
-                                    <a href="team-single.html"
-                                    >read more
-                                        <i class="srn-arrow-right"></i
-                                        ></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4 col-lg-6">
-                        <div class="team-wrap">
-                            <div class="img">
-                                <a href="team-single.html"
-                                ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_4') }}.jpg"
-                                        alt
-                                    /></a>
-                            </div>
-                            <div class="content">
-                                <h6>
-                                    <a href="team-single.html"
-                                    >Shannon O'Connor</a
-                                    >
-                                </h6>
-                                <div class="post">Head of Product</div>
-                                <ul class="list-unstyled social-icons">
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-facebook"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-twitter-x"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-instagram"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-linkedin"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-youtube"></i
-                                            ></a>
-                                    </li>
-                                </ul>
-                                <div class="arrow-read-more">
-                                    <a href="team-single.html"
-                                    >read more
-                                        <i class="srn-arrow-right"></i
-                                        ></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4 col-lg-6">
-                        <div class="team-wrap">
-                            <div class="img">
-                                <a href="team-single.html"
-                                ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_5') }}.jpg"
-                                        alt
-                                    /></a>
-                            </div>
-                            <div class="content">
-                                <h6>
-                                    <a href="team-single.html"
-                                    >Kevin Qwestlove</a
-                                    >
-                                </h6>
-                                <div class="post">Chief Design Officer</div>
-                                <ul class="list-unstyled social-icons">
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-facebook"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-twitter-x"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-instagram"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-linkedin"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-youtube"></i
-                                            ></a>
-                                    </li>
-                                </ul>
-                                <div class="arrow-read-more">
-                                    <a href="team-single.html"
-                                    >read more
-                                        <i class="srn-arrow-right"></i
-                                        ></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4 col-lg-6">
-                        <div class="team-wrap">
-                            <div class="img">
-                                <a href="team-single.html"
-                                ><img
-                                        src="{{ asset('theme/client/assets/images/team/team_img_6') }}.jpg"
-                                        alt
-                                    /></a>
-                            </div>
-                            <div class="content">
-                                <h6>
-                                    <a href="team-single.html"
-                                    >Sarah Albert</a
-                                    >
-                                </h6>
-                                <div class="post">Human Resources</div>
-                                <ul class="list-unstyled social-icons">
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-facebook"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-twitter-x"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-instagram"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-linkedin"></i
-                                            ></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"
-                                        ><i class="bi bi-youtube"></i
-                                            ></a>
-                                    </li>
-                                </ul>
-                                <div class="arrow-read-more">
-                                    <a href="team-single.html"
-                                    >read more
-                                        <i class="srn-arrow-right"></i
-                                        ></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                    @endforelse
+                </div>
+                <div class="d-flex justify-content-center">
+                    {{ $allUser->links() }}
                 </div>
             </div>
         </section>

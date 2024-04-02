@@ -14,6 +14,11 @@ class domainController extends Controller
         return view('admin.pages.domain.index',compact('allDomain'));
     }
 
+    public function sortDelete(){
+        $allDomain = domains::onlyTrashed()->paginate(10);
+        return view('admin.pages.domain.sortDelete',compact('allDomain'));
+    }
+
     public function search(Request $request){
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
@@ -28,6 +33,22 @@ class domainController extends Controller
         ]);
         $allDomain = domains::whereBetween('created_at', [$startDate, $endDate])->paginate(10);
         return view('admin.pages.domain.index',compact('allDomain','startDate','endDate'));
+    }
+
+    public function searchSortDelete(Request $request){
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $request->validate([
+            'startDate' => 'required|before:endDate',
+            'endDate' => 'required|after:startDate'
+        ], [
+            'startDate.required' => 'Không được để trống ngày bắt đầu',
+            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
+            'endDate.required' => 'Không được để trống ngày kết thúc',
+            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+        ]);
+        $allDomain = domains::onlyTrashed()->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
+        return view('admin.pages.domain.sortDelete',compact('allDomain','startDate','endDate'));
     }
 
     public function create(){
@@ -53,7 +74,7 @@ class domainController extends Controller
     }
 
     public function edit($id){
-        $domain = domains::find($id);
+        $domain = domains::withTrashed()->find($id);
         return view('admin.pages.domain.edit',compact('domain'));
     }
 
@@ -66,13 +87,19 @@ class domainController extends Controller
             'nameDomain.required' => 'Không để trống tên lĩnh vực'
         ]);
 
-        $domain = domains::find($request->id);
+        $domain = domains::withTrashed()->find($request->id);
 
         $domain->is_active = $request->is_active;
         $domain->name = $request->nameDomain;
         $domain->save();
 
         return redirect()->route('admin.domain.index');
+    }
+
+    public function restore($id){
+        $idsArr = explode(',', $id);
+        domains::withTrashed()->whereIn('id', $idsArr)->restore();
+        return redirect()->route('admin.domain.sortDeleteRecord');
     }
 
     public function delete($ids){

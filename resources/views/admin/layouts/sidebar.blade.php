@@ -62,6 +62,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.members.index') }}">
+                        <span data-key="t-base-ui">Thành Viên</span>
+                    </a>
+                </li>
+
 
 
             </ul>

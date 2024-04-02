@@ -93,6 +93,36 @@ btnDelete.forEach(btn => {
     });
 });
 
+const btnRestore = document.querySelectorAll('.btnRestore');
+btnRestore.forEach(btn => {
+    btn.addEventListener('click', function () {
+        console.log('delete' + btn.getAttribute('data-id'));
+        Swal.fire({
+            title: "Cảnh báo?",
+            text: "Bạn có chắc chắn muốn khôi phục bản ghi này!",
+            icon: "warning",
+            showCancelButton: !0,
+            confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
+            cancelButtonClass: "btn btn-danger w-xs mt-2",
+            confirmButtonText: "Yes, delete it!",
+            buttonsStyling: !1,
+            showCloseButton: !0,
+        }).then(function (t) {
+            console.log(t);
+            if(t.isConfirmed){
+                window.location.href += `/restore/${btn.getAttribute('data-id')}`;
+                Swal.fire({
+                    title: "Success!",
+                    text: "Bạn đã khôi phục thành công bản ghi.",
+                    icon: "success",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1,
+                });
+            }
+        });
+    });
+});
+
 document.getElementById("sa-params") &&
 document
     .getElementById("sa-params")

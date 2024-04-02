@@ -9,6 +9,11 @@
 .animated.hinge {
     animation-duration: 2s;
 }
+
+.link-redirect:hover {
+    color: var(--secondary) !important;
+    text-decoration: none;
+}
 @keyframes bounce {
     0%,
     20%,

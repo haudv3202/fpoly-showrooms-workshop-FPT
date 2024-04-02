@@ -9,7 +9,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="card-title">Thêm banner</h4>
+                                <h4 class="card-title">Chỉnh sửa lĩnh vực</h4>
                             </div>
                         </div>
                         <div class="card-body">

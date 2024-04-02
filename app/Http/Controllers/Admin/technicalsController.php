@@ -14,6 +14,13 @@ class technicalsController extends Controller
         return view('admin.pages.technicals.index',compact('allTechnicals'));
     }
 
+    public function sortDelete(){
+        $allTechnicals = technicals::onlyTrashed()->paginate(10);
+        return view('admin.pages.technicals.sortDelete',compact('allTechnicals'));
+    }
+
+
+
     public function search(Request $request){
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
@@ -28,6 +35,22 @@ class technicalsController extends Controller
         ]);
         $allTechnicals = technicals::whereBetween('created_at', [$startDate, $endDate])->paginate(10);
         return view('admin.pages.technicals.index',compact('allTechnicals','startDate','endDate'));
+    }
+
+    public function searchSortDelete(Request $request){
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $request->validate([
+            'startDate' => 'required|before:endDate',
+            'endDate' => 'required|after:startDate'
+        ], [
+            'startDate.required' => 'Không được để trống ngày bắt đầu',
+            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
+            'endDate.required' => 'Không được để trống ngày kết thúc',
+            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+        ]);
+        $allTechnicals = technicals::onlyTrashed()->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
+        return view('admin.pages.technicals.sortDelete',compact('allTechnicals','startDate','endDate'));
     }
 
     public function create(){
@@ -50,7 +73,7 @@ class technicalsController extends Controller
     }
 
     public function edit($id){
-        $technicalsOne = technicals::find($id);
+        $technicalsOne = technicals::withTrashed()->find($id);
         return view('admin.pages.technicals.edit',compact('technicalsOne'));
     }
 
@@ -61,12 +84,18 @@ class technicalsController extends Controller
             'technicalsName.required' => 'Không được để trống trạng thái hiển thị'
         ]);
 
-        $technicals = technicals::find($request->id);
+        $technicals = technicals::withTrashed()->find($request->id);
 
         $technicals->name = $request->technicalsName;
         $technicals->save();
 
         return redirect()->route('admin.technicals.index');
+    }
+
+    public function restore($id){
+        $idsArr = explode(',', $id);
+        technicals::withTrashed()->whereIn('id', $idsArr)->restore();
+        return redirect()->route('admin.technicals.sortDeleteRecord');
     }
 
     public function delete($ids){

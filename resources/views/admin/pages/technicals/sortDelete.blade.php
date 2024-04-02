@@ -52,7 +52,7 @@
                                 <div class="d-flex align-items-center ">
                                     <button type="button" class="btn btn-success waves-effect waves-light " id="btnSearch"><i class="ri-filter-2-fill"></i></button>
                                     <div id="dateSearch" hidden >
-                                        <form action="{{ route('admin.technicals.search') }}" method="POST" class="d-flex align-items-center" >
+                                        <form action="{{ route('admin.technicals.searchDelete') }}" method="POST" class="d-flex align-items-center" >
                                            @csrf
                                             <div class="row">
                                                 <div class="col-lg-4">
@@ -82,11 +82,10 @@
 
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('admin.technicals.create') }}"
-                                       class="btn btn-primary waves-effect waves-light">Thêm mới</a>
-                                    <button type="button" onclick="window.location.href='{{ route('admin.technicals.sortDeleteRecord') }}'" class="btn ms-2 btn-warning waves-effect waves-light"
-                                    ><i class="ri-install-fill me-2"></i>Thùng rác</button>
-                                    <button type="button"  hidden class="btn ms-2 btn-danger waves-effect waves-light" id="deleteSelectedBtn">  <i class="ri-delete-bin-line"></i> </button>
+                                    <a href="{{ route('admin.technicals.index') }}"
+                                       class="btn btn-danger waves-effect waves-light">Trở về</a>
+                                    <button type="button" hidden class="btn ms-2 btn-warning waves-effect waves-light"
+                                            id="deleteSelectedBtn"><i class="ri-restart-line"></i></button>
                                 </div>
 
                             </div>
@@ -138,10 +137,12 @@
                                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                                 Edit</a></li>
                                                         <li>
+                                                        <li>
 
-                                                            <a class="dropdown-item remove-item-btn btnDelete" data-id="{{$Technical->id}}">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                                Delete
+                                                            <a class="dropdown-item remove-item-btn btnRestore"
+                                                               data-id="{{$Technical->id}}">
+                                                                <i class=" ri-restart-line align-bottom me-2 text-muted"></i>
+                                                                Restore
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -220,24 +221,24 @@
         deleteSelectedBtn.addEventListener('click', function () {
             const ids = this.getAttribute('data-ids');
             Swal.fire({
-                title: 'Bạn có chắc chắn muốn xóa không?',
-                text: "Dữ liệu sẽ không thể khôi phục lại sau khi xóa!",
+                title: 'Bạn có chắc chắn muốn khôi phục không?',
+                text: "Dữ liệu sẽ được khôi phục lại!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Xóa'
+                confirmButtonText: 'Khôi phục'
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire(
                         {
-                            title: 'Đang xóa...',
+                            title: 'Đang khôi phục...',
                             onBeforeOpen: () => {
                                 Swal.showLoading();
                             }
                         }
                     );
-                    window.location.href += `/delete/${ids}` ;
+                    window.location.href += `/restore/${ids}` ;
                 }
             });
         });

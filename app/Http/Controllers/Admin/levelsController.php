@@ -13,6 +13,27 @@ class levelsController extends Controller
         return view('admin.pages.levels.index',compact('Levels'));
     }
 
+    public function sortDelete(){
+        $Levels = level::onlyTrashed()->paginate(10);
+        return view('admin.pages.levels.sortDelete',compact('Levels'));
+    }
+
+    public function searchSortDelete(Request $request){
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $request->validate([
+            'startDate' => 'required|before:endDate',
+            'endDate' => 'required|after:startDate'
+        ], [
+            'startDate.required' => 'Không được để trống ngày bắt đầu',
+            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
+            'endDate.required' => 'Không được để trống ngày kết thúc',
+            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+        ]);
+        $Levels = level::onlyTrashed()->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
+        return view('admin.pages.levels.sortDelete',compact('Levels','startDate','endDate'));
+    }
+
     public function search(Request $request){
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
@@ -51,7 +72,7 @@ class levelsController extends Controller
     }
 
     public function edit($id){
-        $level = level::find($id);
+        $level = level::withTrashed()->find($id);
         return view('admin.pages.levels.edit',compact('level'));
     }
 
@@ -64,7 +85,7 @@ class levelsController extends Controller
             'nameDomain.required' => 'Không được để trống têm lĩnh vực'
         ]);
 
-        $level = level::find($request->id);
+        $level = level::withTrashed()->find($request->id);
 
         $level->nameLevel = $request->nameLevel;
         $level->description = $request->description;
@@ -73,6 +94,14 @@ class levelsController extends Controller
         return redirect()->route('admin.levels.index');
     }
 
+
+
+
+    public function restore($id){
+        $idsArr = explode(',', $id);
+        level::withTrashed()->whereIn('id', $idsArr)->restore();
+        return redirect()->route('admin.levels.sortDeleteRecord');
+    }
     public function delete($ids){
         $idsArr = explode(',',$ids);
         level::destroy($idsArr);
