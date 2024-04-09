@@ -33,11 +33,12 @@ class projectsController extends Controller
         }
 
         if ($request->has('member')){
-            $projects = projects::whereHas('users',function($query){
-                $query->whereHas('users',function($query){
-                    $query->orWhere('name','like','%'.Str::replace('-',' ',request('member')).'%' );
-                });
-            })->get();
+            $projects = projects::where('added_by','like','%'.Str::replace('-',' ',request('member')).'%' )->get();
+//            $projects = projects::whereHas('users',function($query){
+//                $query->whereHas('users',function($query){
+//                    $query->orWhere('name','like','%'.Str::replace('-',' ',request('member')).'%' );
+//                });
+//            })->get();
         }
         return view('clients.pages.projects',compact('banners','projects','domainsAll'));
     }

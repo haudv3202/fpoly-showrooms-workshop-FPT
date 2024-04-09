@@ -33,6 +33,12 @@ class projects extends Model
         return $this->hasMany(project_domains::class, 'projects_id', 'id');
     }
 
+
+    public function domains_belong()
+    {
+        return $this->belongsToMany(domains::class, 'project_domains', 'projects_id', 'domains_id');
+    }
+
     public function images(){
         return $this->hasMany(images::class, 'projects_id', 'id');
     }

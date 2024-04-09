@@ -55,18 +55,9 @@
                                         <form action="{{ route('admin.domain.searchDelete') }}" method="POST" class="d-flex align-items-center" >
                                            @csrf
                                             <div class="row">
-                                                <div class="col-lg-4">
-                                                    <input type="date" class="form-control ms-2" name="startDate"
-                                                           value="{{ !empty($startDate) ? \Illuminate\Support\Carbon::parse($startDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->format('Y-m-d') }}">
-                                                    @error('startDate')
-                                                    <div class="alert alert-danger h6 m-2">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-lg-1 d-flex align-items-center justify-content-center"><i class="ri-arrow-left-right-line fs-5"></i></div>
-                                                <div  class="col-lg-4">
-                                                    <input type="date" class="form-control ms-2" name="endDate"
-                                                           value="{{ !empty($endDate) ? \Illuminate\Support\Carbon::parse($endDate)->format('Y-m-d') : \Illuminate\Support\Carbon::now()->addDays(7)->format('Y-m-d') }}">
-                                                    @error('endDate')
+                                                <div class="col-lg-9">
+                                                    <input type="text" class="form-control ms-2" placeholder="Nhập tên muốn tìm" name="nameValue" value="{{  $nameValue ?? '' }}">
+                                                    @error('nameValue')
                                                     <div class="alert alert-danger h6 m-2">{{ $message }}</div>
                                                     @enderror
                                                 </div>

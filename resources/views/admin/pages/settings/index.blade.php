@@ -28,12 +28,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Lĩnh Vực</h4>
+                        <h4 class="mb-sm-0">Mức độ dự án</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Lĩnh vực</a></li>
-                                <li class="breadcrumb-item active">Danh sách lĩnh vực</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Mức độ</a></li>
+                                <li class="breadcrumb-item active">Danh sách mức độ</li>
                             </ol>
                         </div>
 
@@ -52,7 +52,7 @@
                                 <div class="d-flex align-items-center ">
                                     <button type="button" class="btn btn-success waves-effect waves-light " id="btnSearch"><i class="ri-filter-2-fill"></i></button>
                                     <div id="dateSearch" hidden >
-                                        <form action="{{ route('admin.domain.search') }}" method="POST" class="d-flex align-items-center" >
+                                        <form action="{{ route('admin.levels.search') }}" method="POST" class="d-flex align-items-center" >
                                            @csrf
                                             <div class="row">
                                                 <div class="col-lg-9">
@@ -72,13 +72,13 @@
                                     </div>
 
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('admin.domain.create') }}"
-                                       class="btn btn-primary waves-effect waves-light">Thêm mới</a>
-                                    <button type="button" onclick="window.location.href='{{ route('admin.domain.sortDeleteRecord') }}'" class="btn ms-2 btn-warning waves-effect waves-light"
-                                    ><i class="ri-install-fill me-2"></i>Thùng rác</button>
-                                    <button type="button"  hidden class="btn ms-2 btn-danger waves-effect waves-light" id="deleteSelectedBtn">  <i class="ri-delete-bin-line"></i> </button>
-                                </div>
+{{--                                <div class="d-flex justify-content-between align-items-center">--}}
+{{--                                    <a href="{{ route('admin.settings.create') }}"--}}
+{{--                                       class="btn btn-primary waves-effect waves-light">Thêm mới</a>--}}
+{{--                                    <button type="button" onclick="window.location.href='{{ route('admin.levels.sortDeleteRecord') }}'" class="btn ms-2 btn-warning waves-effect waves-light"--}}
+{{--                                    ><i class="ri-install-fill me-2"></i>Thùng rác</button>--}}
+{{--                                    <button type="button"  hidden class="btn ms-2 btn-danger waves-effect waves-light" id="deleteSelectedBtn">  <i class="ri-delete-bin-line"></i> </button>--}}
+{{--                                </div>--}}
 
                             </div>
                         </div>
@@ -88,39 +88,36 @@
                                    style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th scope="col" style="width: 10px;">
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" id="checkAll"
-                                                   value="option" data-checked="false">
-                                        </div>
-                                    </th>
+{{--                                    <th scope="col" style="width: 10px;">--}}
+{{--                                        <div class="form-check">--}}
+{{--                                            <input class="form-check-input fs-15" type="checkbox" id="checkAll"--}}
+{{--                                                   value="option" data-checked="false">--}}
+{{--                                        </div>--}}
+{{--                                    </th>--}}
                                     {{--                                    <th>Ảnh</th>--}}
-                                    <th>Tên Lĩnh vực</th>
-                                    <th>Trạng thái</th>
+                                    <th>Keyword</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Nội dung</th>
                                     <th>Thời gian tạo</th>
-
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if($allDomain->count() > 0)
-                                    @foreach($allDomain as $key => $domain)
+                                @if($settings->count() > 0)
+                                    @foreach($settings as $key => $setting)
                                         <tr>
-                                            <th scope="row">
-                                                <div class="form-check">
-                                                    <input class="form-check-input fs-15" type="checkbox"
-                                                           name="checkAll" value="{{ $domain->id }}">
-                                                </div>
-                                            </th>
-                                            <td>{{ $domain->name }}</td>
+{{--                                            <th scope="row">--}}
+{{--                                                <div class="form-check">--}}
+{{--                                                    <input class="form-check-input fs-15" type="checkbox"--}}
+{{--                                                           name="checkAll" value="{{ $setting->id }}">--}}
+{{--                                                </div>--}}
+{{--                                            </th>--}}
+                                            <td>{{ $setting->key }}</td>
+                                            <td>{{ $setting->title }}</td>
                                             <td>
-                                                @if($domain->is_active == 0)
-                                                    <span class="badge bg-success">Đang kích hoạt</span>
-                                                @else
-                                                    <span class="badge bg-danger">Không kích hoạt</span>
-                                                @endif
+                                                {!!  $setting->content  !!}
                                             </td>
-                                            <td>{{ \Illuminate\Support\Carbon::parse($domain->created_at)->format('d M, Y') }}</td>
+                                            <td>{{ \Illuminate\Support\Carbon::parse($setting->created_at)->format('d M, Y') }}</td>
                                             <td>
                                                 <div class="dropdown d-inline-block">
                                                     <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -128,19 +125,11 @@
                                                         <i class="ri-more-fill align-middle"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-
-
                                                         <li><a class="dropdown-item edit-item-btn"
-                                                               href="{{ route('admin.domain.edit',$domain->id) }}"><i
+                                                               href="{{ route('admin.settings.edit',$setting->id) }}"><i
                                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                                 Edit</a></li>
-                                                        <li>
 
-                                                            <a class="dropdown-item remove-item-btn btnDelete" data-id="{{$domain->id}}">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                                Delete
-                                                            </a>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                             </td>
@@ -150,7 +139,7 @@
                                 @endif
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{ $allDomain->links() }}
+                                {{ $settings->links() }}
                             </div>
                         </div>
                     </div>

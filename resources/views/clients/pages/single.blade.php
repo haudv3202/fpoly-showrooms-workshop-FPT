@@ -82,8 +82,11 @@
                                 </div>
                                 <div class="client-details">
                                     <div class="head">Tác giả</div>
+                                    @php
+                                        $members = explode( ',', $project->added_by);
+                                    @endphp
                                     <h6>@forelse($members as $key => $member)
-                                            <a href="{{ route('projects') }}?member={{  to_slug($member->name) }}" class="text-white link-redirect">  {{ $member->name }}</a>{{ $loop->last ? '' : ' , ' }}
+                                            <a href="{{ route('projects') }}?member={{  $member }}" class="text-white link-redirect">  {{ $member }}</a>{{ $loop->last ? '' : ' , ' }}
                                         @empty
                                         @endforelse</h6>
                                 </div>

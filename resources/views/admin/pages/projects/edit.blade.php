@@ -1,6 +1,8 @@
 @extends('admin.layouts.index')
 @section('title',"Trang chủ")
 @push('styles')
+    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
+          type="text/css"/>
     <link rel="stylesheet" href="{{ asset('theme/admin/assets/libs/dropzone/dropzone.css') }}" type="text/css"/>
     <link rel="stylesheet" href="{{ asset('theme/admin/assets/libs/filepond/filepond.min.css') }}" type="text/css"/>
     <link rel="stylesheet"
@@ -257,25 +259,26 @@
                                         <label for="nameInput" class="form-label">Thành viên tham gia</label>
                                     </div>
                                     <div class="col-lg-9">
-                                        <select class="form-control" id="choices-multiple-remove-button" data-choices
-                                                data-choices-removeItem name="members[]" multiple>
-                                            @forelse($users as $key => $member)
-                                                @php
-                                                    $selectedAuthorId = null; // Khởi tạo biến để lưu ID tác giả được chọn
-                                                @endphp
-                                                @foreach($members as $memberCreate)
-                                                    @if($member->id == $memberCreate->author_id)
-                                                        @php
-                                                            $selectedAuthorId = $memberCreate->author_id; // Gán ID tác giả được chọn
-                                                        @endphp
-                                                        @break; // Thoát khỏi vòng lặp nếu đã tìm thấy ID tác giả được chọn
-                                                    @endif
-                                                @endforeach
-                                                <option value="{{ $member->id }}" {{ $member->id == $selectedAuthorId ? 'selected' : ''}}>{{ $member->name }}</option>
-                                            @empty
-                                                <option value="">Không có thành viên tham gia</option>
-                                            @endforelse
-                                        </select>
+                                        <input class="form-control" id="choices-text-remove-button" data-choices="" data-choices-limit="7" data-choices-removeitem="" name="members" type="text" value="{{ $project->added_by }}">
+{{--                                        <select class="form-control" id="choices-multiple-remove-button" data-choices--}}
+{{--                                                data-choices-removeItem name="members[]" multiple>--}}
+{{--                                            @forelse($users as $key => $member)--}}
+{{--                                                @php--}}
+{{--                                                    $selectedAuthorId = null; // Khởi tạo biến để lưu ID tác giả được chọn--}}
+{{--                                                @endphp--}}
+{{--                                                @foreach($members as $memberCreate)--}}
+{{--                                                    @if($member->id == $memberCreate->author_id)--}}
+{{--                                                        @php--}}
+{{--                                                            $selectedAuthorId = $memberCreate->author_id; // Gán ID tác giả được chọn--}}
+{{--                                                        @endphp--}}
+{{--                                                        @break; // Thoát khỏi vòng lặp nếu đã tìm thấy ID tác giả được chọn--}}
+{{--                                                    @endif--}}
+{{--                                                @endforeach--}}
+{{--                                                <option value="{{ $member->id }}" {{ $member->id == $selectedAuthorId ? 'selected' : ''}}>{{ $member->name }}</option>--}}
+{{--                                            @empty--}}
+{{--                                                <option value="">Không có thành viên tham gia</option>--}}
+{{--                                            @endforelse--}}
+{{--                                        </select>--}}
                                     </div>
                                     @error('members')
                                     <div class="col-lg-12">
@@ -325,14 +328,20 @@
 
     <script src="{{ asset('theme/admin/assets/js/pages/form-file-upload.init.js') }}"></script>
 
-    <!-- ckeditor -->
+    <-- ckeditor -->
     <script src="{{ asset('theme/admin/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
 
-    <!-- quill js -->
+    <-- quill js -->
     <script src="{{ asset('theme/admin/assets/libs/quill/quill.min.js') }}"></script>
 
     <!-- init js -->
     <script src="{{ asset('theme/admin/assets/js/pages/form-editor.init.js') }}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <-- Sweet alert init js-->
+    <script src="{{ asset('theme/admin/assets/js/pages/sweetalerts.init.js') }}"></script>
     <script>
         const btnRemoves = document.querySelectorAll('.btn-remove-image-des');
         const inputImageOld = document.querySelector('input[name=oldImagesDescription]');
@@ -340,15 +349,35 @@
         btnRemoves.forEach(btnRemove => {
             btnRemove.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
-                const rowImageOld = document.getElementById('desimg-' + id);
-                rowImageOld.remove();
-                let array = inputImageOld.value.split(',');
-                let index = array.indexOf(id);
-                if (index !== -1) {
-                    array.splice(index, 1);
-                }
-                inputImageOld.value = array.join(',')
-                console.log(inputImageOld.value);
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa không?',
+                    text: "Dữ liệu sẽ không thể khôi phục lại sau khi xóa!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xóa'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Bạn đã xóa thành công ảnh.",
+                            icon: "success",
+                            confirmButtonClass: "btn btn-primary w-xs mt-2",
+                            buttonsStyling: !1,
+                        });
+                        const rowImageOld = document.getElementById('desimg-' + id);
+                        rowImageOld.remove();
+                        let array = inputImageOld.value.split(',');
+                        let index = array.indexOf(id);
+                        if (index !== -1) {
+                            array.splice(index, 1);
+                        }
+                        inputImageOld.value = array.join(',')
+                    }
+                });
+
+
             });
         });
     </script>

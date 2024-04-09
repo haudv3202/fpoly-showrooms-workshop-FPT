@@ -28,10 +28,12 @@ class HomeController extends Controller
             return $image->type == 2;
         });
         $project = projects::where([['is_active',0],['id',$id]])->first();
-        $members = json_decode($project->added_by);
-        $members = User::whereIn('id',$members)->get();
+        $project->increment('views');
+        $project->save();
+//        $members = json_decode($project->added_by);
+//        $members = User::whereIn('id',$members)->get();
         $domainsAll =  domains::all();
         $technicals = technicals::all();
-        return view('clients.pages.single',compact('project','avatar','domainsAll','technicals','members','desribe'));
+        return view('clients.pages.single',compact('project','avatar','domainsAll','technicals','desribe'));
     }
 }

@@ -4,6 +4,16 @@
 @section('namePages',"Tất cả dự án")
 @include('clients.components.breadcrumbs')
 @section('content')
+    @php
+        $settings = \App\Models\settings::all();
+        $title_project = $settings->filter(function($setting){
+            return $setting->key == 'title_project';
+        })->first();
+
+        $des_project = $settings->filter(function($setting){
+            return $setting->key == 'des_project';
+        })->first();
+    @endphp
     <main id="body-content" class="bg-white">
         <section class="section-spacing pt-0">
             <div class="container">
@@ -14,15 +24,10 @@
                         <div class="section-title text-center">
                             <span>Latest Case Studies</span>
                             <h2 class="wow">
-                                Our Creativity
-                                <strong>Introduce Our Projects</strong>
+                                {!! $title_project->content !!}
                             </h2>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. In urna lectus, mattis non
-                                accumsan in, tempor dictum neque. In hac
-                                habitasse platea dictumst. Lorem ipsum dolor
-                                sit amet, consectetur adipiscing.
+                                {!! $des_project->content !!}
                             </p>
                         </div>
                     </div>

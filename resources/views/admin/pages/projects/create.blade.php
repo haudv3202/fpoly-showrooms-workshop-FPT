@@ -183,13 +183,14 @@
                                         <label for="nameInput" class="form-label">Thành viên tham gia</label>
                                     </div>
                                     <div class="col-lg-9">
-                                        <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem name="members[]" multiple>
-                                            @if($users->count() > 0)
-                                                @foreach($users as $key => $member)
-                                                    <option value="{{ $member->id }}">{{ $member->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
+                                        <input class="form-control" id="choices-text-remove-button" data-choices="" data-choices-limit="7" name="members" data-choices-removeitem="" type="text">
+{{--                                        <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem name="members[]" multiple>--}}
+{{--                                            @if($users->count() > 0)--}}
+{{--                                                @foreach($users as $key => $member)--}}
+{{--                                                    <option value="{{ $member->id }}">{{ $member->name }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            @endif--}}
+{{--                                        </select>--}}
                                     </div>
                                     @error('members')
                                     <div class="col-lg-12">

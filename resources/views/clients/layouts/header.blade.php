@@ -29,7 +29,7 @@
     @endphp
     <nav class="navbar navbar-expand-lg header-anim">
         <div class="container"><a class="navbar-brand" href="{{ route('/') }}"><img
-                    src="{{ asset('theme/client/assets/images/'.$arrayHeader[0].'.svg') }}" alt></a>
+                    src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt></a>
             <form class="d-flex order-lg-last ms-3 align-items-center">
                 <a href="#" id="search_home"><i class="srn-search"></i> </a>
                 <button
@@ -40,7 +40,7 @@
             </form>
             <div class="navbar-collapse offcanvas offcanvas-start offcanvas-collapse" id="navbarCollapse">
                 <div class="offcanvas-header"><a class="navbar-brand" href="{{ route('/') }}"><img
-                            src="{{ asset('theme/client/assets/images/'.$arrayHeader[0].'.svg') }}" alt></a><button class="navbar-toggler x collapsed"
+                            src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt></a><button class="navbar-toggler x collapsed"
                                                                                                           type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarCollapse"
                                                                                                           aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"><i
                             class="bi bi-x-lg"></i></button></div>

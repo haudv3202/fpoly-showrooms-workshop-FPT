@@ -18,7 +18,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('deploy_link');
             $table->foreignIdFor(level::class);
-            $table->json('added_by');
+            $table->string('added_by');
             $table->integer('views')->default(0);
             $table->boolean('is_active')->default(true);
             $table->softDeletes('deleted_at');

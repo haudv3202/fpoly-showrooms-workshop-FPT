@@ -20,35 +20,25 @@ class memberController extends Controller
     }
 
     public function search(Request $request){
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $nameValue = $request->input('nameValue');
         $request->validate([
-            'startDate' => 'required|before:endDate',
-            'endDate' => 'required|after:startDate'
+            'nameValue' => 'required',
         ], [
-            'startDate.required' => 'Không được để trống ngày bắt đầu',
-            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
-            'endDate.required' => 'Không được để trống ngày kết thúc',
-            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+            'nameValue.required' => 'Không được để trống ngày bắt đầu'
         ]);
-        $members = User::whereBetween('created_at', [$startDate, $endDate])->paginate(10);
-        return view('admin.pages.members.index',compact('members','startDate','endDate'));
+        $members = User::where('name','like', '%' . $nameValue . '%')->paginate(10);
+        return view('admin.pages.members.index',compact('members','nameValue'));
     }
 
     public function searchSortDelete(Request $request){
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $nameValue = $request->input('nameValue');
         $request->validate([
-            'startDate' => 'required|before:endDate',
-            'endDate' => 'required|after:startDate'
+            'nameValue' => 'required',
         ], [
-            'startDate.required' => 'Không được để trống ngày bắt đầu',
-            'startDate.before' => 'Ngày bắt đầu phải trước ngày kết thúc',
-            'endDate.required' => 'Không được để trống ngày kết thúc',
-            'endDate.after' => 'Ngày kết thúc phải sau ngày bắt đầu'
+            'nameValue.required' => 'Không được để trống ngày bắt đầu'
         ]);
-        $members = User::onlyTrashed()->whereBetween('created_at', [$startDate, $endDate])->paginate(10);
-        return view('admin.pages.members.sortDelete',compact('members','startDate','endDate'));
+        $members = User::onlyTrashed()->where('name','like', '%' . $nameValue . '%')->paginate(10);
+        return view('admin.pages.members.sortDelete',compact('members','nameValue'));
     }
 
     public function create(){

@@ -244,12 +244,11 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    $members = json_decode($project->added_by);
-                                                    $users = \App\Models\User::whereIn('id', $members)->get();
+                                                    $members = explode(',', $project->added_by);
                                                 @endphp
-                                                @forelse($users as $key => $member)
+                                                @forelse($members as $key => $member)
                                                     <span
-                                                        class="badge bg-secondary">{{ !empty($member->name) ? $member->name : ''  }}</span>
+                                                        class="badge bg-secondary">{{ !empty($member) ? $member : ''  }}</span>
                                                 @empty
                                                     <span class="badge bg-secondary">Không có thành viên tham dự</span>
                                                 @endforelse

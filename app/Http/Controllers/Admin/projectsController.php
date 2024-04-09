@@ -153,12 +153,13 @@ class projectsController extends Controller
         ]);
         $data = [];
 
+
         $idProjects = projects::create([
             'name' => $request->nameProject,
             'description' => $request->description,
             'deploy_link' => $request->linkDeloy,
             'level_id' => $request->level,
-            'added_by' => json_encode($request->members),
+            'added_by' =>  $request->members,
             'is_active' => 0,
             'views' => 0,
             'created_at' => Carbon::now()
@@ -169,7 +170,7 @@ class projectsController extends Controller
             $extension = pathinfo($imagesFile->name, PATHINFO_EXTENSION);   // .jpg .png .pdf
 
             $imageName = Str::random(10) . '.' . $extension;
-            $data[3][] = [
+            $data[2][] = [
                 'image' => $imageName,
                 'is_active' => 0,
                 'type' => 2,
@@ -182,38 +183,38 @@ class projectsController extends Controller
         $request->imageProjectAvatar->storeAs('public/images/projects/avatar/', $imageName);
 
 
-        foreach ($request->members as $item) {
-            $data[0][] = [
-                'projects_id' => $idProjects,
-                'author_id' => $item
-            ];
-        }
+//        foreach ($request->members as $item) {
+//            $data[0][] = [
+//                'projects_id' => $idProjects,
+//                'author_id' => $item
+//            ];
+//        }
 
 
         foreach ($request->domains as $item) {
-            $data[1][] = [
+            $data[0][] = [
                 'projects_id' => $idProjects,
                 'domains_id' => $item
             ];
         }
 
         foreach ($request->technicalsUse as $item) {
-            $data[2][] = [
+            $data[1][] = [
                 'projects_id' => $idProjects,
                 'technicals_id' => $item
             ];
         }
 
-        $data[3][] = [
+        $data[2][] = [
             'image' => $imageName,
             'is_active' => 0,
             'type' => 1,
             'projects_id' => $idProjects
         ];
-        DB::table('project_users')->insert($data[0]);
-        DB::table('project_domains')->insert($data[1]);
-        DB::table('technical_projects')->insert($data[2]);
-        DB::table('images')->insert($data[3]);
+//        DB::table('project_users')->insert($data[0]);
+        DB::table('project_domains')->insert($data[0]);
+        DB::table('technical_projects')->insert($data[1]);
+        DB::table('images')->insert($data[2]);
         return redirect()->route('admin.projects.index');
     }
 
@@ -239,8 +240,8 @@ class projectsController extends Controller
         })->first();
         $technicalUse = technical_projects::where('projects_id', $id)->get();
         $domainProjects = project_domains::where('projects_id', $id)->get();
-        $members = project_users::with('users')->whereIn('author_id', json_decode($project->added_by))->get();
-        return view('admin.pages.projects.edit', compact('levels', 'technicals', 'domains', 'users', 'project', 'imagesDes', 'avatar', 'technicalUse', 'domainProjects', 'members','imagesDesOld'));
+//        $members = project_users::with('users')->whereIn('author_id', json_decode($project->added_by))->get();
+        return view('admin.pages.projects.edit', compact('levels', 'technicals', 'domains', 'users', 'project', 'imagesDes', 'avatar', 'technicalUse', 'domainProjects','imagesDesOld'));
     }
 
     public function update(Request $request)
@@ -274,7 +275,7 @@ class projectsController extends Controller
         $project->description = $request->description;
         $project->deploy_link = $request->linkDeloy;
         $project->level_id = $request->level;
-        $project->added_by = json_encode($request->members);
+        $project->added_by = $request->members;
         $project->updated_at = Carbon::now();
         $project->save();
         $images = images::where('projects_id', $request->id)->get();
@@ -337,23 +338,23 @@ class projectsController extends Controller
 
         }
 
-        if($project->added_by != json_encode($request->members)){
-            $project_users = project_users::where('projects_id', $request->id)->get();
-
-            $project_users->map(function ($item) {
-                $item->delete();
-            });
-            $data = [];
-            foreach ($request->members as $item) {
-                $data[] = [
-                    'projects_id' => $request->id,
-                    'author_id' => $item
-                ];
-            }
-
-            DB::table('project_users')->insert($data);
-
-        }
+//        if($project->added_by != json_encode($request->members)){
+//            $project_users = project_users::where('projects_id', $request->id)->get();
+//
+//            $project_users->map(function ($item) {
+//                $item->delete();
+//            });
+//            $data = [];
+//            foreach ($request->members as $item) {
+//                $data[] = [
+//                    'projects_id' => $request->id,
+//                    'author_id' => $item
+//                ];
+//            }
+//
+//            DB::table('project_users')->insert($data);
+//
+//        }
 
         $project_domains = project_domains::where('projects_id', $request->id)->get();
         $domaisProjects = $project_domains->map(function ($item){
@@ -394,25 +395,25 @@ class projectsController extends Controller
         }
 
 
-        $members = project_users::whereIn('author_id', json_decode($project->added_by))->get();
-        $memberDifferences = $members->map(function ($item){
-            return $item['author_id'];
-        })->toArray();
-
-        $memberDifferences = $this->array_equal($request->members,$memberDifferences);
-        if(!$memberDifferences){
-            foreach ($members as $item) {
-                $item->delete();
-            }
-            $data = [];
-            foreach ($request->members as $item) {
-                $data[] = [
-                    'projects_id' => $request->id,
-                    'author_id' => $item
-                ];
-            }
-            DB::table('project_users')->insert($data);
-        }
+//        $members = project_users::whereIn('author_id', json_decode($project->added_by))->get();
+//        $memberDifferences = $members->map(function ($item){
+//            return $item['author_id'];
+//        })->toArray();
+//
+//        $memberDifferences = $this->array_equal($request->members,$memberDifferences);
+//        if(!$memberDifferences){
+//            foreach ($members as $item) {
+//                $item->delete();
+//            }
+//            $data = [];
+//            foreach ($request->members as $item) {
+//                $data[] = [
+//                    'projects_id' => $request->id,
+//                    'author_id' => $item
+//                ];
+//            }
+//            DB::table('project_users')->insert($data);
+//        }
 
         return redirect()->route('admin.projects.index');
     }

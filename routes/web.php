@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\domainController;
 use App\Http\Controllers\Admin\levelsController;
 use App\Http\Controllers\Admin\memberController;
+use App\Http\Controllers\Admin\settingsController;
 use App\Http\Controllers\Admin\technicalsController;
 use App\Http\Controllers\Client\OurTeamController;
 use App\Http\Controllers\Admin\projectsController as AdminProjectsController;
@@ -103,6 +104,14 @@ Route::prefix('admin')->middleware('auth')->group(function(){
         Route::get('/delete/{ids}',[memberController::class,'delete'])->name('admin.members.delete');
         Route::post('search',[memberController::class,'search'])->name('admin.members.search');
         Route::post('searchDelete',[memberController::class,'searchSortDelete'])->name('admin.members.searchDelete');
+    });
+
+
+    Route::prefix('settings')->group(function(){
+        Route::get('/',[settingsController::class,'index'])->name('admin.settings.index');
+        Route::get('/edit/{id}',[settingsController::class,'edit'])->name('admin.settings.edit');
+        Route::post('/edit',[settingsController::class,'update'])->name('admin.settings.update');
+        Route::post('search',[settingsController::class,'search'])->name('admin.settings.search');
     });
 
 
